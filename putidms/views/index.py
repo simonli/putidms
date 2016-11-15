@@ -14,7 +14,9 @@ def index():
 
 @mod.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
+    form = LoginForm(request.form)
     if request.method == 'POST':
-        pass
+        if form.validate():
+            print "*"*50
+            return form.username.data
     return render_template('login.html',form=form)

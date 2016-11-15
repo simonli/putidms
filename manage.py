@@ -2,7 +2,7 @@
 from flask_script import Manager, Server
 from putidms import create_app
 
-manager = Manager(create_app('e:/workspace/putidms/config.py'))
+manager = Manager(create_app('../config.py'))
 
 manager.add_command("runserver", Server('localhost', port=5000))
 

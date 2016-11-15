@@ -1,24 +1,20 @@
-# -*- coding:utf-8 -*-
 from __future__ import with_statement
 from flask import Blueprint, request, render_template
 from datetime import datetime
+from putidms.forms.login_form import LoginForm
 
-mod = Blueprint('home', __name__)
+mod = Blueprint('index', __name__)
 
 
 @mod.route('/')
-def home():
+def index():
     date_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     return 'Hello World. - %s' % date_str
 
 
-@mod.route('/test')
-def test():
-    return 'Hello World. testing'
-
-
 @mod.route('/login', methods=['GET', 'POST'])
 def login():
+    form = LoginForm()
     if request.method == 'POST':
         pass
-    return render_template('login.html')
+    return render_template('login.html',form=form)

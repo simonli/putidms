@@ -1,11 +1,11 @@
 # -*- coding:utf-8 -*-
 from flask import Flask, request, redirect, jsonify, flash, url_for, render_template
 from putidms.extensions import db
-from putidms.views import home
+from putidms.views import index
 
 DEFAULT_APP_NAME = 'putidms'
 DEFAULT_BLUEPRINTS = (
-    (home.mod, ''),
+    (index.mod, ''),
 )
 
 

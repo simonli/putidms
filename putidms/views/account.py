@@ -10,6 +10,6 @@ mod = Blueprint('account', __name__)
 @mod.route('/')
 def home():
     date_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    with open('D:/count.txt','a+') as fp:
+    with open('count.txt','a+') as fp:
         fp.write(date_str+"\n")
     return 'Hello World. - %s' % date_str

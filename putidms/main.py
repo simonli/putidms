@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 from flask import Flask, request, redirect, jsonify, flash, url_for, render_template
-from putidms.extensions import db
+from putidms.extensions import db, login_manager
 from putidms.views import index
 
 DEFAULT_APP_NAME = 'putidms'
@@ -27,6 +27,7 @@ def create_app(config=None, blueprints=None):
 
 def configure_extensions(app):
     db.init_app(app)
+    login_manager.init_app(app)
 
 
 def configure_before_handlers(app):

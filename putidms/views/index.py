@@ -17,6 +17,6 @@ def index():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        print '～'*50
+        print '～#'*50
         return form.username.data
     return render_template('login.html',form=form)

@@ -23,6 +23,7 @@ def create_app(config=None, blueprints=None):
 
     configure_blueprints(app, blueprints)
 
+
     return app
 
 

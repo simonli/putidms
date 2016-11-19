@@ -3,7 +3,7 @@ from flask_script import Manager, Server
 from putidms import create_app
 from putidms.extensions import db
 
-app = create_app('../config.py')
+app = create_app()
 
 manager = Manager(app)
 

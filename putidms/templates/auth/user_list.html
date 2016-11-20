@@ -13,10 +13,22 @@
 {% endfor %}
 {% if users %}
     <table class="table table-bordered">
-    <tr
-    {% for u in users %}
-
-    {% endfor %}
+        <tr>
+            <td>Id</td>
+            <td>UserName</td>
+            <td>RealName</td>
+            <td>Email</td>
+            <td>Role</td>
+        </tr>
+        {% for u in users %}
+            <tr>
+                <td>{{ u.id }}</td>
+                <td>{{ u.username }}</td>
+                <td>{{ u.realname }}</td>
+                <td>{{ u.email }}</td>
+                <td>{{ u.role }}</td>
+            </tr>
+        {% endfor %}
     </table>
 {% endif %}
 

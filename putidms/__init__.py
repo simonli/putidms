@@ -2,11 +2,15 @@
 from flask import Flask, request, redirect, jsonify, flash, url_for, render_template
 from putidms.extensions import db, login_manager
 from putidms.auth import auth
+from putidms.main import main
+from putidms.admin import admin
 from config import Config
 
 DEFAULT_APP_NAME = 'putidms'
 DEFAULT_BLUEPRINTS = (
+    (main, ''),
     (auth, '/auth'),
+    (admin, '/admin')
 )
 
 
@@ -18,11 +22,10 @@ def create_app(config=None, blueprints=None):
     app.config.from_object(Config)
 
     configure_extensions(app)
-    configure_errorhandlers(app)
-    configure_before_handlers(app)
+    # configure_errorhandlers(app)
+    # configure_before_handlers(app)
 
     configure_blueprints(app, blueprints)
-
 
     return app
 
@@ -68,4 +71,3 @@ def configure_errorhandlers(app):
 def configure_blueprints(app, blueprints):
     for blueprint, url_prefix in blueprints:
         app.register_blueprint(blueprint, url_prefix=url_prefix)
-

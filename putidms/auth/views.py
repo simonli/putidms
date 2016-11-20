@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
-from __future__ import with_statement
 from flask import Blueprint, request, render_template, redirect, url_for, flash
 from .forms import LoginForm, UserForm
 from putidms.models.user import User
 from flask_login import login_user, logout_user, login_required
 from putidms import db
+from datetime import datetime
 
 mod = Blueprint('auth', __name__)
 
@@ -12,12 +12,15 @@ mod = Blueprint('auth', __name__)
 @mod.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    print '@'*100
     if form.validate_on_submit():
+        print '*'*100
         user = User.query.filter_by(username=form.username.data).first()
         if user:
             if user.verify_password(form.password.data):
                 login_user(user)
-                flash(u'登陆成功！欢迎回来，%s!' % user.username, 'success')
+                user.update_login_info(request.remote_addr)
+                flash(u'登陆成功！欢迎回来，%s!' % user.realname, 'success')
                 return redirect(request.args.get('next') or url_for('main.index'))
             else:
                 flash(u'密码不正确。', 'danger')

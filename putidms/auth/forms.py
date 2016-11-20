@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from wtforms import Form, StringField, PasswordField, SubmitField, validators
+from wtforms import StringField, PasswordField, SubmitField, validators
 from flask_wtf import FlaskForm
 
 
@@ -15,4 +15,4 @@ class UserForm(FlaskForm):
     realname = StringField(u'真实名', validators=[validators.input_required(u'真实名或法名不能为空。')])
     email = StringField(u'邮件', validators=[validators.input_required(u'邮件地址不能为空。')])
     # role = StringField(u'角色', validators=[validators.input_required(u'角色不能为空。')])
-    submit = SubmitField(u'登录')
+    submit = SubmitField(u'添加')

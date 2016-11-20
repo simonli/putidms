@@ -13,3 +13,13 @@
 .relieveBai ul li{ float:left; width:49%; border-right:1px solid #CCC; line-height:2.5em;}
 .relieveBai ul li a{ color:#333; display:block;}
 .relieveBai ul li:nth-last-child(1){ border: none}
+
+.container{
+    margin-top: 10px;
+    /*border: #CCCCCC solid 1px;*/
+}
+#header{
+    line-height: 90px;
+    border: #CCCCCC solid 1px;
+    margin-bottom: 15px;
+}

@@ -1,6 +1,5 @@
 # -*- coding:utf-8 -*-
 from putidms import db
-from flask_sqlalchemy import BaseQuery
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from putidms import login_manager
@@ -18,9 +17,10 @@ class User(UserMixin, db.Model):
     _password_hash = db.Column('password', db.String(255), nullable=False, server_default=u'')
     realname = db.Column(db.String(255))
     email = db.Column(db.String(255), nullable=False)
-    create_time = db.Column(db.DateTime,default=datetime.utcnow())
-    last_login_time = db.Column(db.DateTime, default=datetime.utcnow)
-    last_login_ip = db.Column(db.String(50))
+    create_time = db.Column(db.DateTime, default=datetime.now())
+    last_login_time = db.Column(db.DateTime, default=datetime.now())
+    last_login_ip = db.Column(db.String(50), default='')
+    login_count = db.Column(db.Integer, nullable=False, default=0)
     is_active = db.Column(db.Boolean, nullable=False, default=True)
     role = db.Column(db.Integer, nullable=False, default=MEMBER)
 
@@ -53,8 +53,16 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self._password_hash, password)
 
+    def update_login_info(self, last_login_ip):
+        self.last_login_ip = last_login_ip
+        self.last_login_time = datetime.now()
+        self.login_count += 1
+        db.session.add(self)
+        db.session.commit()
 
-# callback function for  flask-login extension
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+
+    # callback function for  flask-login extension
+    @staticmethod
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))

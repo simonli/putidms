@@ -1,25 +1,14 @@
-﻿body { width: 100%; font-family: "Lantinghei SC","Microsoft YaHei", Helvetica, Arial, sans-serif; }
+﻿body {
+    font-family: "Lantinghei SC", "Microsoft YaHei", Helvetica, Arial, sans-serif;
+}
 
-/*浮动层*/
-.transparent{background-color: rgba(0, 0, 0, 0.6); filter: alpha(opacity=40);  width:100%; height:100%; position:fixed; z-index:3001;left:0;top:0;}
-.float{ width:90%; margin:0px auto; background:#FFF; height:170px; border-radius:0.3em; margin-top:100px; text-align:center; padding-top:25px; font-size:16px; }
-.float span{ background:url(../images/success.gif) no-repeat; background-size:2em; width:170px; margin:0 auto;font-size:1.4em; padding-left:40px; display:block; height:2em; line-height:2em;}
-.float p{ line-height:60px; height:76px; color:#000;}
-.float a{ height:53px; width:100%; border-top:1px solid #CCC; display:block; line-height:53px; color:#0ae;}
-
-.relieveBai{ width:80%; margin:0px auto; background:#FFF;  border-radius:0.3em; margin-top:200px; text-align:center; padding-top:25px;font:normal 16px/27px "Microsoft YaHei"; }
-.relieveBai p{ font-size:0.9em; height:3em;  text-align:center;}
-.relieveBai ul { overflow:hidden; width:100%;border-top:1px solid #CCC;}
-.relieveBai ul li{ float:left; width:49%; border-right:1px solid #CCC; line-height:2.5em;}
-.relieveBai ul li a{ color:#333; display:block;}
-.relieveBai ul li:nth-last-child(1){ border: none}
-
-.container{
+.container {
     margin-top: 10px;
     /*border: #CCCCCC solid 1px;*/
 }
-#header{
-    line-height: 90px;
-    border: #CCCCCC solid 1px;
+
+#header {
+    line-height: 60px;
+    /*border: #CCCCCC solid 1px;*/
     margin-bottom: 15px;
 }

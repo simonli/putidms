@@ -11,6 +11,14 @@
         {{ message }}
     </div>
 {% endfor %}
+{% if users %}
+    <table class="table table-bordered">
+    <tr
+    {% for u in users %}
+
+    {% endfor %}
+    </table>
+{% endif %}
 
 <script src="{{ url_for('static', filename='js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>

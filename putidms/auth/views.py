@@ -54,8 +54,11 @@ def user_add():
         user.password = form.password.data
         user.realname = form.realname.data
         user.email = form.email.data
+        user.role = form.role.data
+        user.create_time=datetime.utcnow()
+        user.last_login_time = datetime.utcnow()
         user.last_login_ip = request.remote_addr
-        user.role=User.ADMIN
+
         db.session.add(user)
         db.session.commit()
         flash(u'新增用户成功！', 'success')

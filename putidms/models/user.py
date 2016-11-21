@@ -4,13 +4,17 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from putidms import login_manager
 from datetime import datetime
+from putidms.helper import enum
 
 
 class User(UserMixin, db.Model):
     __tablename__ = 'putidms_users'
-    MEMBER = 100  # 修学处档案义工权限
-    ADMIN = 200  # 辅导委档案义工权限
-    SUPER_ADMIN = 999  # 超级管理员，可以添加User和Admin
+
+    # MEMBER = 100 修学处档案义工权限
+    # ADMIN = 200   辅导委档案义工权限
+    # SUPER_ADMIN = 999  超级管理员，可以添加User和Admin
+    ROLES = enum(MEMBER=100, ADMIN=200, SUPER_ADMIN=999)
+    ROLES = {100: u'修学处档案义工', 200: u'辅导委档案义工', 999: u'超级管理员'}
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True, index=True)
@@ -22,7 +26,7 @@ class User(UserMixin, db.Model):
     last_login_ip = db.Column(db.String(50), default='')
     login_count = db.Column(db.Integer, nullable=False, default=0)
     is_active = db.Column(db.Boolean, nullable=False, default=True)
-    role = db.Column(db.Integer, nullable=False, default=MEMBER)
+    role = db.Column(db.Integer, nullable=False, default=ROLES.MEMBER)
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -40,15 +44,15 @@ class User(UserMixin, db.Model):
 
     @property
     def is_super_admin(self):
-        return self.role == self.SUPER_ADMIN
+        return self.role == self.ROLES.SUPER_ADMIN
 
     @property
     def is_admin(self):
-        return self.role == self.ADMIN
+        return self.role == self.ROLES.ADMIN
 
     @property
     def is_member(self):
-        return self.role == self.MEMBER
+        return self.role == self.ROLES.MEMBER
 
     def verify_password(self, password):
         return check_password_hash(self._password_hash, password)
@@ -60,9 +64,12 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         db.session.commit()
 
-
     # callback function for  flask-login extension
     @staticmethod
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
+
+    @staticmethod
+    def get_role_description(role_type):
+        return User.ROLES.ROLES_DESCRIPTION.get(role_type)

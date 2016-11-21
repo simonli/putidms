@@ -12,9 +12,9 @@ mod = Blueprint('auth', __name__)
 @mod.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    print '@'*100
+    print '@' * 100
     if form.validate_on_submit():
-        print '*'*100
+        print '*' * 100
         user = User.query.filter_by(username=form.username.data).first()
         if user:
             if user.verify_password(form.password.data):
@@ -55,7 +55,7 @@ def user_add():
         user.realname = form.realname.data
         user.email = form.email.data
         user.role = form.role.data
-        user.create_time=datetime.utcnow()
+        user.create_time = datetime.utcnow()
         user.last_login_time = datetime.utcnow()
         user.last_login_ip = request.remote_addr
 
@@ -66,3 +66,25 @@ def user_add():
     if form.errors:
         flash(form.errors, 'danger')
     return render_template('auth/user_add.html', form=form)
+
+
+@mod.route('/user/edit/<int:id>', methods=['GET', 'POST'])
+def user_edit(id):
+    user = User.query.get(id)
+    form = UserForm(obj=user)
+    if form.validate_on_submit():
+        form.populate_obj(user)
+        db.session.add(user)
+        db.session.commit()
+        flash(u'编辑用户 %s 成功！'%user.realname, 'success')
+        return redirect(url_for('auth.user_list'))
+    if form.errors:
+        flash(form.errors, 'danger')
+    return render_template('auth/user_edit.html', form=form, user=user)
+
+
+
+@mod.route('/user/delete/<int:id>', methods=['GET', 'POST'])
+def user_delete(id):
+    pass
+

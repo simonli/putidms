@@ -1,38 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-{% for category, message in get_flashed_messages(with_categories=true) %}
-    <div class="alert alert-{{ category }} alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        {{ message }}
-    </div>
-{% endfor %}
-{% if users %}
-    <table class="table table-bordered">
-        <tr>
-            <td>Id</td>
-            <td>UserName</td>
-            <td>RealName</td>
-            <td>Email</td>
-            <td>Role</td>
-        </tr>
-        {% for u in users %}
+{% extends 'base.html' %}
+{% block content %}
+    {% if users %}
+        <table class="table table-bordered">
             <tr>
-                <td>{{ u.id }}</td>
-                <td>{{ u.username }}</td>
-                <td>{{ u.realname }}</td>
-                <td>{{ u.email }}</td>
-                <td>{{ u.role }}</td>
+                <td>Id</td>
+                <td>UserName</td>
+                <td>RealName</td>
+                <td>Email</td>
+                <td>Role</td>
+                <td>修改/删除</td>
             </tr>
-        {% endfor %}
-    </table>
-{% endif %}
-
-<script src="{{ url_for('static', filename='js/jquery-3.1.1.min.js') }}"></script>
-<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
-</body>
-</html>
+            {% for u in users %}
+                <tr>
+                    <td>{{ u.id }}</td>
+                    <td>{{ u.username }}</td>
+                    <td>{{ u.realname }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>{{ u.get_role_name(u.role) }}</td>
+                    <td><a href="{{ url_for('auth.user_edit',id=u.id) }}">编辑</a>|
+                        <a href="{{ url_for('auth.user_delete',id=u.id) }}">删除</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}

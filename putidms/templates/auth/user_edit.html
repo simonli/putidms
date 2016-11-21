@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% from "_macros.html" import render_field, render_errors, render_submit_field %}
+{% block content %}
+    <form action="{{ url_for('auth.user_edit',id=user.id) }}" method="post" class="form-horizontal" role="form">
+        {{ form.csrf_token }}
+        {{ render_field(form.username) }}
+        {{ render_field(form.password) }}
+        {{ render_field(form.realname) }}
+        {{ render_field(form.email) }}
+        {{ render_field(form.role) }}
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-8">
+                {{ render_submit_field(form.submit,label=u'ddd') }}
+            </div>
+        </div>
+    </form>
+{% endblock %}
+

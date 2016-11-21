@@ -14,7 +14,8 @@ class User(UserMixin, db.Model):
     # ADMIN = 200   辅导委档案义工权限
     # SUPER_ADMIN = 999  超级管理员，可以添加User和Admin
     ROLES = enum(MEMBER=100, ADMIN=200, SUPER_ADMIN=999)
-    ROLES = {100: u'修学处档案义工', 200: u'辅导委档案义工', 999: u'超级管理员'}
+    ROLES_NAMES = {100:u'修学处档案义工',200:u'辅导委档案义工',999:u'超级管理员'}
+
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True, index=True)
@@ -64,12 +65,13 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def get_role_name(self, role_type):
+        return self.ROLES_NAMES.get(role_type)
+
     # callback function for  flask-login extension
     @staticmethod
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
 
-    @staticmethod
-    def get_role_description(role_type):
-        return User.ROLES.ROLES_DESCRIPTION.get(role_type)
+

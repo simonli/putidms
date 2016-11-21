@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, SubmitField, validators, SelectF
 from flask_wtf import FlaskForm
 from putidms.models.user import User
 
-ROLE_CHOICES = [(v, User.get_description(k)) for (k, v) in User.ROLES.to_dict.items()]
+ROLE_CHOICES = [(v, User.ROLES_NAMES.get(v)) for (k, v) in User.ROLES.to_dict.items()]
 ROLE_CHOICES.insert(0, (0, ''))
 
 

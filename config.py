@@ -14,6 +14,18 @@ class Config():
 
     # WTF_CSRF_ENABLED = False
 
+class DevelopmentConfig(Config):
+    pass
+
+class ProductionConfig(Config):
+    pass
+
+configs = {
+    'development':DevelopmentConfig,
+    'production':ProductionConfig,
+    'default':DevelopmentConfig
+}
+
 
 
 

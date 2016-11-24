@@ -4,7 +4,7 @@ from putidms.extensions import db, login_manager
 from putidms.auth import auth
 from putidms.main import main
 from putidms.admin import admin
-from config import Config
+from config import configs
 
 DEFAULT_APP_NAME = 'putidms'
 DEFAULT_BLUEPRINTS = (
@@ -14,17 +14,16 @@ DEFAULT_BLUEPRINTS = (
 )
 
 
-def create_app(config=None, blueprints=None):
+def create_app(config_name=None, blueprints=None):
     if blueprints is None:
         blueprints = DEFAULT_BLUEPRINTS
 
     app = Flask(DEFAULT_APP_NAME)
-    app.config.from_object(Config)
+    app.config.from_object(configs[config_name])
 
     configure_extensions(app)
     # configure_errorhandlers(app)
     # configure_before_handlers(app)
-
     configure_blueprints(app, blueprints)
 
     return app

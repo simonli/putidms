@@ -3,25 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
-    <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css"/>
-    <link href="{{ url_for('static', filename='css/common.css') }}" rel="stylesheet" type="text/css"/>
+    {% block stylesheet %}
+        <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"
+              type="text/css"/>
+        <link href="{{ url_for('static', filename='css/common.css') }}" rel="stylesheet" type="text/css"/>
+    {% endblock %}
 </head>
 <body>
-<div class="container">
-    <div class="row" id="header">
-        This is a header
-    </div>
-    <div class="row" id="content">
-        <div class="col-md-3">
-            <div class="list-group">
-                <a href="#" class="list-group-item active">Cras justo odio</a>
-                <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
-                <a href="#" class="list-group-item">Morbi leo risus</a>
-                <a href="#" class="list-group-item">Porta ac consectetur ac</a>
-                <a href="#" class="list-group-item">Vestibulum at eros</a>
-            </div>
+<header>
+    <div class='header-top'>
+        <div class="container">
+            <h2 class="putidms-title"><a href="{{ url_for('main.index') }}">菩提书院辅导员管理系统</a></h2>
+            <p class="lead signature">愿以此功德普及于一切，我等与众生皆共成佛道</p>
         </div>
+    </div>
+    <div class="header-nav">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><a href="{{ url_for('main.index') }}"><span class="glyphicon glyphicon-home"> 首页</span></a>
+                </li>
+                <li><a href="#">Library</a></li>
+                <li class="active">Data</li>
+                {% if current_user.is_authenticated %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-user"> {{ current_user.username }} </span><b
+                                class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="">发表博文</a></li>
+                            <li><a href="{{ url_for('auth.user_edit',id=current_user.id) }}">管理博客</a></li>
+                            <li><a href="{{ url_for('auth.logout') }}">退出登陆</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+            </ol>
+
+        </div>
+    </div>
+
+
+</header>
+<div class="container">
+    <div class="row" id="content">
         <div class="col-md-8 col-md-offset-1">
+            {% block flash %}
+                {% for category, message in get_flashed_messages(with_categories=true) %}
+                    <div class="alert alert-{{ category }} alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endblock %}
+
             {% block content %}{% endblock %}
         </div>
     </div>
@@ -30,16 +64,6 @@
     </div>
 
 </div>
-
-
-{% block flash %}
-    {% for category, message in get_flashed_messages(with_categories=true) %}
-        <div class="alert alert-{{ category }} alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            {{ message }}
-        </div>
-    {% endfor %}
-{% endblock %}
 
 
 <script src="{{ url_for('static', filename='js/jquery-3.1.1.min.js') }}"></script>

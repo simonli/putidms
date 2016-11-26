@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 from flask import Blueprint, request, render_template, redirect, url_for, flash
 from .forms import LoginForm, UserForm
-from putidms.models.user import User
+from putidms.models.user import User, Role
 from flask_login import login_user, logout_user, login_required
 from putidms import db
 from datetime import datetime
@@ -54,7 +54,7 @@ def user_add():
         user.password = form.password.data
         user.realname = form.realname.data
         user.email = form.email.data
-        user.role = form.role.data
+        user.role = Role.query.get(form.role_id.data)
         user.create_time = datetime.utcnow()
         user.last_login_time = datetime.utcnow()
         user.last_login_ip = request.remote_addr
@@ -72,19 +72,20 @@ def user_add():
 def user_edit(id):
     user = User.query.get(id)
     form = UserForm(obj=user)
+    print "@" * 50
+    print user.role_id
+    print "%" * 50
     if form.validate_on_submit():
         form.populate_obj(user)
         db.session.add(user)
         db.session.commit()
-        flash(u'编辑用户 %s 成功！'%user.realname, 'success')
+        flash(u'编辑用户 %s 成功！' % user.realname, 'success')
         return redirect(url_for('auth.user_list'))
-    if form.errors:
-        flash(form.errors, 'danger')
+    # if form.errors:
+    #     flash(form.errors, 'danger')
     return render_template('auth/user_edit.html', form=form, user=user)
-
 
 
 @mod.route('/user/delete/<int:id>', methods=['GET', 'POST'])
 def user_delete(id):
     pass
-

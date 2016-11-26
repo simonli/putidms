@@ -16,7 +16,7 @@
                     <td>{{ u.username }}</td>
                     <td>{{ u.realname }}</td>
                     <td>{{ u.email }}</td>
-                    <td>{{ u.get_role_name(u.role) }}</td>
+                    <td>{{ u.role.show_name }}</td>
                     <td><a href="{{ url_for('auth.user_edit',id=u.id) }}">编辑</a>|
                         <a href="{{ url_for('auth.user_delete',id=u.id) }}">删除</a>
                     </td>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="Generator" content="EditPlus®">
+    <meta name="Author" content="">
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
+    <title>获取多说评论数的JS方法</title>
+    <script src="jquery-1.11.3.min.js"></script>
+
+    <script>
+        function get_comments_count(thread_id) {
+            var countUrl = "http://api.duoshuo.com/threads/counts.jsonp?short_name=gasgoo&threads=" + thread_id;
+            $.ajax({
+                url: countUrl,
+                type: 'GET',
+                dataType: 'jsonp',
+                success: function (result) {
+                    var commentCount = result['response']['' + thread_id + '']['comments']+'条评论';
+                    $(".ds-thread-count").text(commentCount);
+                },
+                error: function (err) {
+                    var obj = $.parseJSON(err.responseText);
+                    alert(obj.Message);
+                }
+            });
+        }
+        get_comments_count('70001557');
+    </script>
+</head>
+<body>
+<span id="article"></span>
+</body>
+</html>

@@ -7,23 +7,43 @@ from datetime import datetime
 from putidms.helper import enum
 
 
+class Permission:
+    USER = 0x01
+    MODERATOR = 0x02
+    ADMIN = 0xff
+
+
+class Role(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False, unique=True, index=True)
+    default = db.Column(db.Boolean, default=False, index=True)
+    permissions = db.Column(db.Integer)
+    users = db.relationship('User', backref='role', lazy='dynamic')
+
+    @staticmethod
+    def insert_roles():
+        roles = {
+            'User': Permission.USER,
+            'Moderator': Permission.MODERATOR,
+            'Admin': Permission.ADMIN
+        }
+
+
 class User(UserMixin, db.Model):
     __tablename__ = 'putidms_users'
-
     # MEMBER = 100 修学处档案义工权限
     # ADMIN = 200   辅导委档案义工权限
     # SUPER_ADMIN = 999  超级管理员，可以添加User和Admin
     ROLES = enum(MEMBER=100, ADMIN=200, SUPER_ADMIN=999)
-    ROLES_NAMES = {100:u'修学处档案义工',200:u'辅导委档案义工',999:u'超级管理员'}
-
+    ROLES_NAMES = {100: u'修学处档案义工', 200: u'辅导委档案义工', 999: u'超级管理员'}
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True, index=True)
     _password_hash = db.Column('password', db.String(255), nullable=False, server_default=u'')
     realname = db.Column(db.String(255))
     email = db.Column(db.String(255), nullable=False)
-    create_time = db.Column(db.DateTime, default=datetime.now())
-    last_login_time = db.Column(db.DateTime, default=datetime.now())
+    create_time = db.Column(db.DateTime, default=datetime.now)
+    last_login_time = db.Column(db.DateTime, default=datetime.now)
     last_login_ip = db.Column(db.String(50), default='')
     login_count = db.Column(db.Integer, nullable=False, default=0)
     is_active = db.Column(db.Boolean, nullable=False, default=True)
@@ -73,5 +93,3 @@ class User(UserMixin, db.Model):
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
-
-

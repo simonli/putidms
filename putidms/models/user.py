@@ -4,7 +4,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from putidms import login_manager
 from datetime import datetime
-from putidms.helper import enum
 
 
 class Permission:
@@ -15,7 +14,7 @@ class Permission:
 
 class Role(db.Model):
     __tablename__ = 'roles'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), nullable=False, unique=True, index=True)
     show_name = db.Column(db.String(100))
     default = db.Column(db.Boolean, default=False, index=True)
@@ -45,7 +44,7 @@ class Role(db.Model):
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(50), nullable=False, unique=True, index=True)
     _password_hash = db.Column('password', db.String(255), nullable=False, server_default=u'')
     realname = db.Column(db.String(255))

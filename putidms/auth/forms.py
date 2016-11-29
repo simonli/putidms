@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 from wtforms import StringField, PasswordField, SubmitField, validators, SelectField, ValidationError
 from flask_wtf import FlaskForm
-from putidms.models import User, Role
+from putidms.models.user import User, Role
 
 
 class LoginForm(FlaskForm):

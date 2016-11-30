@@ -1,15 +1,23 @@
 # -*- coding:utf-8 -*-
 from flask import Blueprint, request, render_template, redirect, url_for, flash
-from putidms.models.org import Division, Department, Class
+from putidms.models.org import Division, Department, Class, Duty
 from putidms import db
 from putidms.decorators import admin_required
-from putidms.admin.forms import DivisionForm, DepartmentForm, ClassForm
+from putidms.admin.forms import DivisionForm, DepartmentForm, ClassForm,DutyForm
 from flask_login import current_user
 
 mod = Blueprint('admin', __name__)
 
 
+@mod.route('/divsion/list')
+@admin_required
+def division_list():
+    divs = Division.query.all()
+    return render_template('admin/division_list.html', divs=divs)
+
+
 @mod.route('/divsion/add', methods=['GET', 'POST'])
+@admin_required
 def division_add():
     form = DivisionForm()
     if form.validate_on_submit():
@@ -23,7 +31,9 @@ def division_add():
         return redirect(url_for('admin.division_list'))
     return render_template('admin/division_add.html', form=form)
 
+
 @mod.route('/divsion/edit/<int:id>', methods=['GET', 'POST'])
+@admin_required
 def division_edit(id):
     div = Division.query.get(id)
     form = DivisionForm(obj=div)
@@ -33,16 +43,25 @@ def division_edit(id):
         db.session.commit()
         flash(u'修学处 %s 编辑成功！' % div.name, 'success')
         return redirect(url_for('admin.division_list'))
-    return render_template('admin/division_edit.html',form=form, div=div)
+    return render_template('admin/division_edit.html', form=form, div=div)
+
+
+@mod.route('/department/list')
+@admin_required
+def department_list():
+    depts = Department.query.all()
+    return render_template('admin/department_list.html', depts=depts)
 
 
 @mod.route('/department/add', methods=['GET', 'POST'])
-def division_add():
+@admin_required
+def department_add():
     form = DepartmentForm()
     if form.validate_on_submit():
         dept = Department()
         dept.name = form.name.data
         dept.desc = form.desc.data
+        dept.division = Division.query.get(form.division_id.data)
         dept.update_user = current_user.id
         db.session.add(dept)
         db.session.commit()
@@ -50,41 +69,91 @@ def division_add():
         return redirect(url_for('admin.department_list'))
     return render_template('admin/department_add.html', form=form)
 
-@mod.route('/divsion/edit/<int:id>', methods=['GET', 'POST'])
-def division_edit(id):
-    div = Division.query.get(id)
-    form = DivisionForm(obj=div)
+
+@mod.route('/department/edit/<int:id>', methods=['GET', 'POST'])
+@admin_required
+def department_edit(id):
+    dept = Department.query.get(id)
+    form = DepartmentForm(obj=dept)
     if form.validate_on_submit():
-        form.populate_obj(div)
-        db.session.add(div)
+        form.populate_obj(dept)
+        db.session.add(dept)
         db.session.commit()
-        flash(u'修学处 %s 编辑成功！' % div.name, 'success')
-        return redirect(url_for('admin.division_list'))
-    return render_template('admin/division_edit.html',form=form, div=div)
+        flash(u'修学点 %s 编辑成功！' % dept.name, 'success')
+        return redirect(url_for('admin.department_list'))
+    return render_template('admin/department_edit.html', form=form, dept=dept)
 
 
-@mod.route('/divsion/add', methods=['GET', 'POST'])
-def division_add():
-    form = DivisionForm()
-    if form.validate_on_submit():
-        div = Division()
-        div.name = form.name.data
-        div.desc = form.desc.data
-        div.update_user = current_user.id
-        db.session.add(div)
-        db.session.commit()
-        flash(u'成功添加修学处: %s!' % div.name, 'success')
-        return redirect(url_for('admin.division_list'))
-    return render_template('admin/division_add.html', form=form)
+@mod.route('/class/list')
+@admin_required
+def class_list():
+    classes = Class.query.all()
+    return render_template('admin/class_list.html', classes=classes)
 
-@mod.route('/divsion/edit/<int:id>', methods=['GET', 'POST'])
-def division_edit(id):
-    div = Division.query.get(id)
-    form = DivisionForm(obj=div)
+
+@mod.route('/class/add', methods=['GET', 'POST'])
+@admin_required
+def class_add():
+    form = ClassForm()
     if form.validate_on_submit():
-        form.populate_obj(div)
-        db.session.add(div)
+        c = Class()
+        c.name = form.name.data
+        c.desc = form.desc.data
+        c.department = Department.query.get(form.department_id.data)
+        c.update_user = current_user.id
+        db.session.add(c)
         db.session.commit()
-        flash(u'修学处 %s 编辑成功！' % div.name, 'success')
-        return redirect(url_for('admin.division_list'))
-    return render_template('admin/division_edit.html',form=form, div=div)
+        flash(u'成功添加班级: %s!' % c.name, 'success')
+        return redirect(url_for('admin.class_list'))
+    return render_template('admin/class_add.html', form=form)
+
+
+@mod.route('/class/edit/<int:id>', methods=['GET', 'POST'])
+@admin_required
+def class_edit(id):
+    c = Class.query.get(id)
+    form = DivisionForm(obj=c)
+    if form.validate_on_submit():
+        form.populate_obj(c)
+        db.session.add(c)
+        db.session.commit()
+        flash(u'班级 %s 编辑成功！' % c.name, 'success')
+        return redirect(url_for('admin.class_list'))
+    return render_template('admin/class_edit.html', form=form, cls=c)
+
+
+@mod.route('/duty/list')
+@admin_required
+def duty_list():
+    duties = Duty.query.all()
+    return render_template('admin/duty_list.html', duties=duties)
+
+
+@mod.route('/duty/add', methods=['GET', 'POST'])
+@admin_required
+def duty_add():
+    form = DutyForm()
+    if form.validate_on_submit():
+        duty = Duty()
+        duty.name = form.name.data
+        duty.desc = form.desc.data
+        duty.update_user = current_user.id
+        db.session.add(duty)
+        db.session.commit()
+        flash(u'成功添加岗位: %s!' % duty.name, 'success')
+        return redirect(url_for('admin.duty_list'))
+    return render_template('admin/duty_add.html', form=form)
+
+
+@mod.route('/duty/edit/<int:id>', methods=['GET', 'POST'])
+@admin_required
+def duty_edit(id):
+    duty = Duty.query.get(id)
+    form = DivisionForm(obj=duty)
+    if form.validate_on_submit():
+        form.populate_obj(duty)
+        db.session.add(duty)
+        db.session.commit()
+        flash(u'岗位 %s 编辑成功！' % duty.name, 'success')
+        return redirect(url_for('admin.duty_list'))
+    return render_template('admin/dutyedit.html', form=form, duty=duty)

@@ -3,35 +3,6 @@ from putidms import db
 from datetime import datetime
 
 
-class Duty(db.Model):
-    __tablename__ = 'duties'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(200), nullable=False, index=True, unique=True)
-    desc = db.Column(db.String(255))
-    create_time = db.Column(db.DateTime)
-    update_user = db.Column(db.Integer)
-    update_time = db.Column(db.DateTime, default=datetime.utcnow)
-    counselors = db.relationship('Counselor', backref='duty', lazy='dynamic')
-
-    @staticmethod
-    def insert_duties():
-        duties = {
-            u'辅导员': (u'岗位：辅导员',),
-            u'实习辅导员': (u'岗位：辅导员',),
-            u'辅助员': (u'岗位：辅助员',)
-        }
-        for r in duties:
-            duty = Duty.query.filter_by(name=r).first()
-            if duty is None:
-                duty = Duty(name=r)
-            duty.desc = duty[r][0]
-            duty.create_time = datetime.utcnow()
-            duty.update_user = 'liq'
-            duty.update_time = datetime.utcnow()
-            db.session.add(duty)
-        db.session.commit()
-
-
 class Counselor(db.Model):
     __tablename__ = 'counselors'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

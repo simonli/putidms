@@ -1,8 +1,7 @@
 # -*- coding:utf-8 -*-
-from wtforms import StringField, PasswordField, SubmitField,TextAreaField, \
-    validators, SelectField, ValidationError
+from wtforms import StringField, TextAreaField, validators, SelectField, ValidationError
 from flask_wtf import FlaskForm
-from putidms.models.org import Division, Department
+from putidms.models.org import Division, Department, Duty
 
 
 class DivisionForm(FlaskForm):
@@ -47,7 +46,7 @@ class ClassForm(FlaskForm):
     division_id = SelectField(u'所属修学处', coerce=int)
     department_id = SelectField(u'所属修学点', coerce=int)
     name = StringField(u'班级名称', validators=[validators.input_required(u'名称不能为空。')])
-    number = StringField(u'班级编号', validators=[validators.input_required(u'名称不能为空。')]) # 班级编号
+    number = StringField(u'班级编号', validators=[validators.input_required(u'名称不能为空。')])  # 班级编号
     desc = TextAreaField(u'简要描述')
 
     def __init__(self, *args, **kwargs):
@@ -63,7 +62,25 @@ class ClassForm(FlaskForm):
         if field.data <= 0:
             raise ValidationError(u'请选择所属修学处。')
 
+    def validate_department_id(self, field):
+        if field.data <= 0:
+            raise ValidationError(u'请选择所属修学点。')
+
     def validate_name(self, field):
         if field.data != self.department.name and \
                 Department.query.filter_by(name=field.data).first():
             raise ValidationError(u'修学点名称已存在。')
+
+
+class DutyForm(FlaskForm):
+    name = StringField(u'岗位名称', validators=[validators.input_required(u'名称不能为空。')])
+    desc = TextAreaField(u'简要描述')
+
+    def __init__(self, *args, **kwargs):
+        super(DutyForms, self).__init__(*args, **kwargs)
+        self.duty = kwargs.get('obj')
+
+    def validate_name(self, field):
+        if field.data != self.duty.name and \
+                Duty.query.filter_by(name=field.data).first():
+            raise ValidationError(u'岗位名称已存在。')

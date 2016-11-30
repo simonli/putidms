@@ -19,6 +19,6 @@ def division_add():
         div.update_user = current_user.id
         db.session.add(div)
         db.session.commit()
-        flash(u'成功添加修学处 %s!' % div.name, 'success')
+        flash(u'成功添加修学处: %s!' % div.name, 'success')
         return redirect(url_for('admin.division_list'))
     return render_template('admin/division_add.html', form=form)

@@ -30,7 +30,7 @@ class DepartmentForm(FlaskForm):
         self.division_id.choices = division_choices
         self.department = kwargs.get('obj')
         if self.department:
-            self.division_id.default = self.department.division_id
+            self.division_id.default = self.department.division.id
 
     def validate_division_id(self, field):
         if field.data <= 0:
@@ -54,9 +54,11 @@ class ClassForm(FlaskForm):
         division_choices = [(r.id, r.name) for r in Division.query.order_by(Division.name).all()]
         division_choices.insert(0, (0, u'请选择所属修学处'))
         self.division_id.choices = division_choices
-        self.department = kwargs.get('obj')
-        if self.department:
-            self.division_id.default = self.department.division_id
+        self.cls = kwargs.get('obj')
+        if self.cls:
+            self.department_id.choices.default = self.cls.department.id
+            self.division_id.default = self.cls.department.division.id
+
 
     def validate_division_id(self, field):
         if field.data <= 0:
@@ -77,7 +79,7 @@ class DutyForm(FlaskForm):
     desc = TextAreaField(u'简要描述')
 
     def __init__(self, *args, **kwargs):
-        super(DutyForms, self).__init__(*args, **kwargs)
+        super(DutyForm, self).__init__(*args, **kwargs)
         self.duty = kwargs.get('obj')
 
     def validate_name(self, field):

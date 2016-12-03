@@ -9,9 +9,9 @@ class Division(db.Model):
     name = db.Column(db.String(255), index=True, unique=True, nullable=False)
     desc = db.Column(db.Text)
     create_time = db.Column(db.DateTime, default=datetime.utcfromtimestamp)
-    departments = db.relationship('Department', backref='division', lazy='dynamic')
     update_user = db.Column(db.Integer)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
+    departments = db.relationship('Department', backref='division', lazy='dynamic')
 
     def __repr__(self):
         return '<Division %r>' % self.name
@@ -26,7 +26,6 @@ class Department(db.Model):
     create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_user = db.Column(db.Integer)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
-    counselors = db.relationship('Counselor', backref='department', lazy='dynamic')
     classes = db.relationship('Class', backref='department', lazy='dynamic')
 
     def __repr__(self):
@@ -38,11 +37,12 @@ class Class(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
     name = db.Column(db.String(255), index=True, unique=True, nullable=False)
-    number = db.Column(db.String(255), nullable=False, index=True)  # 班级编号
+    number = db.Column(db.String(255), unique=True, nullable=False, index=True)  # 班级编号
     desc = db.Column(db.Text)
     create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_user = db.Column(db.Integer)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
+    counselors = db.relationship('Counselor', backref='cls', lazy='dynamic')
 
     def __repr__(self):
         return '<Class %r>' % self.name

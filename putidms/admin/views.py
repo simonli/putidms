@@ -156,4 +156,4 @@ def duty_edit(id):
         db.session.commit()
         flash(u'岗位 %s 编辑成功！' % duty.name, 'success')
         return redirect(url_for('admin.duty_list'))
-    return render_template('admin/dutyedit.html', form=form, duty=duty)
+    return render_template('admin/duty_edit.html', form=form, duty=duty)

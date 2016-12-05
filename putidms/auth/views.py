@@ -70,17 +70,12 @@ def user_add():
 def user_edit(id):
     user = User.query.get(id)
     form = UserForm(obj=user)
-    print "@" * 50
-    print user.role_id
-    print "%" * 50
     if form.validate_on_submit():
         form.populate_obj(user)
         db.session.add(user)
         db.session.commit()
         flash(u'编辑用户 %s 成功！' % user.realname, 'success')
         return redirect(url_for('auth.user_list'))
-    # if form.errors:
-    #     flash(form.errors, 'danger')
     return render_template('auth/user_edit.html', form=form, user=user)
 
 

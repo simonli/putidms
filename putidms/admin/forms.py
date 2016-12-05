@@ -1,11 +1,12 @@
 # -*- coding:utf-8 -*-
-from wtforms import StringField, TextAreaField, validators, SelectField, ValidationError
+from wtforms import StringField, TextAreaField, SelectField, ValidationError
+from wtforms.validators import input_required as ir
 from flask_wtf import FlaskForm
 from putidms.models.org import Division, Department, Duty
 
 
 class DivisionForm(FlaskForm):
-    name = StringField(u'修学处名称', validators=[validators.input_required(u'名称不能为空。')])
+    name = StringField(u'修学处名称', validators=[ir(u'名称不能为空。')])
     desc = TextAreaField(u'简要描述')
 
     def __init__(self, *args, **kwargs):
@@ -20,7 +21,7 @@ class DivisionForm(FlaskForm):
 
 class DepartmentForm(FlaskForm):
     division_id = SelectField(u'所属修学处', coerce=int)
-    name = StringField(u'修学点名称', validators=[validators.input_required(u'名称不能为空。')])
+    name = StringField(u'修学点名称', validators=[ir(u'名称不能为空。')])
     desc = TextAreaField(u'简要描述')
 
     def __init__(self, *args, **kwargs):
@@ -45,8 +46,8 @@ class DepartmentForm(FlaskForm):
 class ClassForm(FlaskForm):
     division_id = SelectField(u'所属修学处', coerce=int)
     department_id = SelectField(u'所属修学点', coerce=int)
-    name = StringField(u'班级名称', validators=[validators.input_required(u'名称不能为空。')])
-    number = StringField(u'班级编号', validators=[validators.input_required(u'名称不能为空。')])  # 班级编号
+    name = StringField(u'班级名称', validators=[ir(u'名称不能为空。')])
+    number = StringField(u'班级编号', validators=[ir(u'名称不能为空。')])  # 班级编号
     desc = TextAreaField(u'简要描述')
 
     def __init__(self, *args, **kwargs):
@@ -75,7 +76,7 @@ class ClassForm(FlaskForm):
 
 
 class DutyForm(FlaskForm):
-    name = StringField(u'岗位名称', validators=[validators.input_required(u'名称不能为空。')])
+    name = StringField(u'岗位名称', validators=[ir(u'名称不能为空。')])
     desc = TextAreaField(u'简要描述')
 
     def __init__(self, *args, **kwargs):

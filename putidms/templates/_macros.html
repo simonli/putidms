@@ -21,7 +21,9 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro render_submit(field, label=None) -%}
+{% macro render_submit_field(field, label=None) -%}
     {% if not label %}{% set label=field.label.text %}{% endif %}
-    <input type="submit" class="form-group {{ kwargs.pop('class_', '') }}"  value="{{label}}">
+    <div class="form-group {% if field.errors %}has-error{% endif %} {{ kwargs.pop('class_', '') }}">
+        <input type="submit" class="form-control" value="{{label}}">
+    </div>
 {%- endmacro %}

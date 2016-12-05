@@ -1,12 +1,19 @@
 # -*- coding:utf-8 -*-
-from flask import Blueprint, request, render_template, redirect, url_for, flash
+from flask import Blueprint, request, render_template, redirect, url_for, flash, jsonify
 from putidms.models.org import Division, Department, Class, Duty
 from putidms import db
 from putidms.decorators import admin_required
-from putidms.admin.forms import DivisionForm, DepartmentForm, ClassForm,DutyForm
-from flask_login import current_user
+from putidms.admin.forms import DivisionForm, DepartmentForm, ClassForm, DutyForm
+from flask_login import current_user, login_required
 
 mod = Blueprint('admin', __name__)
+
+
+@mod.route('/_add_numbers', methods=['POST'])
+def _add_numbers():
+    a = request.form.get('a', 0, type=int)
+    b = request.form.get('b', 0, type=int)
+    return jsonify(d=a * b)
 
 
 @mod.route('/divsion/list')
@@ -16,7 +23,8 @@ def division_list():
     return render_template('admin/division_list.html', divs=divs)
 
 
-@mod.route('/divsion/add', methods=['GET', 'POST'])
+@mod.route('/division/add', methods=['GET', 'POST'])
+@login_required
 @admin_required
 def division_add():
     form = DivisionForm()
@@ -32,7 +40,7 @@ def division_add():
     return render_template('admin/division_add.html', form=form)
 
 
-@mod.route('/divsion/edit/<int:id>', methods=['GET', 'POST'])
+@mod.route('/division/edit/<int:id>', methods=['GET', 'POST'])
 @admin_required
 def division_edit(id):
     div = Division.query.get(id)
@@ -157,3 +165,17 @@ def duty_edit(id):
         flash(u'岗位 %s 编辑成功！' % duty.name, 'success')
         return redirect(url_for('admin.duty_list'))
     return render_template('admin/duty_edit.html', form=form, duty=duty)
+
+
+@mod.route('/admin/_get_departments', methods=['POST'])
+def _department_query():
+    division_id = request.form.get('division_id', 0, type=int)
+    depts = Division.query.get(division_id).departments
+    return jsonify(departments=depts)
+
+
+@mod.route('/admin/_get_classes', methods=['POST'])
+def _class_query():
+    dept_id = request.form.get('department_id', 0, type=int)
+    classes = Department.query.get(dept_id).classes
+    return jsonify(classes=classes)

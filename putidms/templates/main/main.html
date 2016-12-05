@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="{{ url_for('static', filename='js/jquery-3.1.1.min.js') }}"></script>
+
+    <script type=text/javascript>
+        function submit_res() {
+            var a = $('#a').val();
+            var b = $('#b').val();
+            $.ajax({
+                url: '/admin/_add_numbers',
+                type: 'POST',
+                data: {'a': a, 'b': b},
+                success: function (data) {
+                    $('#res').text(data.d)
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+<h1>Example</h1>
+<p><input type=text size=5 id="a" name=a> +
+    <input type=text size=5 id="b" name=b> =
+    <span id="res">?</span>
+<p><a href=# onclick="submit_res()" id=calculate>calculate server side</a>
+</body>
+</html>

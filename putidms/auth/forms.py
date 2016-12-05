@@ -26,9 +26,6 @@ class UserForm(FlaskForm):
         self.role_id.choices = role_choices
         self.user = kwargs.get('obj')
         if self.user:
-            print '~' * 100
-            print self.user.role_id
-            print '#' * 100
             self.role_id.default = self.user.role_id
 
     def validate_role_id(self, field):

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% from "_macros.html" import render_field, render_errors, render_submit %}
+{% block content %}
+<form action="{{ url_for('main.counselor_add') }}" method="POST">
+    {{ form.csrf_token }}
+    {{ render_field(form.username) }}
+    {{ render_field(form.religiousname) }}
+    {{ render_field(form.gender) }}
+    {{ render_field(form.gender) }}
+    {{ render_field(form.birthday) }}
+    {{ render_field(form.mobile) }}
+    {{ render_field(form.email) }}
+    {{ render_field(form.division_id) }}
+    {{ render_field(form.department_id) }}
+    {{ render_field(form.class_id) }}
+    {{ render_field(form.duty_id) }}
+    {{ render_submit(form.submit,'添加',class_='btn btn-primary') }}
+</form>
+{% endblock %}

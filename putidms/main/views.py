@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from flask import Blueprint, request, render_template, redirect, url_for, flash
+from flask import Blueprint, request, render_template, redirect, url_for, flash, jsonify
 from datetime import datetime
 from .forms import CounselorForm, LeadClassRecordForm, TrainingRecordForm, EvaluationRecordForm
 from putidms.models.counselor import Counselor, LeadClassRecord, TrainingRecord, EvaluationRecord
@@ -14,6 +14,18 @@ mod = Blueprint('main', __name__)
 @mod.route('/index')
 def index():
     return render_template('main/index.html')
+
+
+@mod.route('/testing')
+def main():
+    return render_template('main/main.html')
+
+
+@mod.route('/_add_numbers')
+def _add_numbers():
+    a = request.args.get('a', 0, type=int)
+    b = request.args.get('b', 0, type=int)
+    return jsonify(result=a + b)
 
 
 @mod.route('/counselor/list')
@@ -66,6 +78,9 @@ def counselor_delete(id):
     return redirect(url_for('.counselor_list'))
 
 
-@mod.route('/counselor/query/<string:querystr>')
-def counselor(querystr):
-    pass
+@mod.route('/counselor/_counselor_query', methods=['POST'])
+def _counselor_query():
+    query_str = '%' + request.form.get('query_str') + '%'
+    rule = db.or_(Counselor.username.like(query_str), Counselor.religiousname.like(query_str))
+    counselors = Counselor.query.filter(rule).all()
+    return jsonify(counselors=counselors)

@@ -14,7 +14,7 @@ class LoginForm(FlaskForm):
 
 class UserForm(FlaskForm):
     username = StringField(u'用户名', validators=[ir(u'用户名不能为空。')])
-    password = PasswordField(u'密码', validators=[ir(u'密码不能为空。')], widget=PasswordInput(hide_value=False))
+    password = PasswordField(u'密码', validators=[ir(u'密码不能为空。')])
     realname = StringField(u'真实姓名', validators=[ir(u'真实名或法名不能为空。')])
     email = StringField(u'邮件', validators=[ir(u'邮件地址不能为空。')])
     role_id = SelectField(u'权限', coerce=int)

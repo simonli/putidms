@@ -52,12 +52,16 @@ class User(UserMixin, db.Model):
     _password_hash = db.Column('password', db.String(255), nullable=False, server_default=u'')
     realname = db.Column(db.String(255))
     email = db.Column(db.String(255), nullable=False)
-    create_time = db.Column(db.DateTime, default=datetime.now)
     last_login_time = db.Column(db.DateTime, default=datetime.now)
     last_login_ip = db.Column(db.String(50), default='')
     login_count = db.Column(db.Integer, nullable=False, default=0)
     is_active = db.Column(db.Boolean, nullable=False, default=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    create_user = db.Column(db.Integer)
+    create_time = db.Column(db.DateTime)
+    update_user = db.Column(db.Integer)
+    update_time = db.Column(db.DateTime, default=datetime.utcnow)
+    is_delete = db.Column(db.Integer,default=0)
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)

@@ -2,7 +2,7 @@
 from flask import Blueprint, request, render_template, redirect, url_for, flash
 from .forms import LoginForm, UserForm
 from putidms.models.user import User, Role
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 from putidms import db
 from datetime import datetime
 
@@ -63,8 +63,6 @@ def user_add():
         db.session.commit()
         flash(u'新增用户成功！', 'success')
         return redirect(url_for('auth.user_list'))
-    if form.errors:
-        flash(form.errors,'danger')
     return render_template('auth/user_add.html', form=form)
 
 
@@ -81,6 +79,12 @@ def user_edit(id):
     return render_template('auth/user_edit.html', form=form, user=user)
 
 
-@mod.route('/user/delete/<int:id>', methods=['GET', 'POST'])
+@mod.route('/user/delete/<int:id>', methods=['GET'])
 def user_delete(id):
-    pass
+    user = User.query.get(id)
+    user.is_delete = 1
+    user.update_user = current_user.id
+    db.session.add(user)
+    db.session.commit()
+    flash(u'删除用户 %s 成功！' % user.realname, 'success')
+    return redirect(url_for('auth.user_list'))

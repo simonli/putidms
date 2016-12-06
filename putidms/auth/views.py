@@ -63,6 +63,8 @@ def user_add():
         db.session.commit()
         flash(u'新增用户成功！', 'success')
         return redirect(url_for('auth.user_list'))
+    if form.errors:
+        flash(form.errors,'danger')
     return render_template('auth/user_add.html', form=form)
 
 

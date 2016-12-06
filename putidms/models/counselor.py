@@ -23,6 +23,9 @@ class Counselor(db.Model):
     training_records = db.relationship('TrainingRecord', backref='counselor', lazy='dynamic')
     evaluation_records = db.relationship('EvaluationRecord', backref='counselor', lazy='dynamic')
 
+    def __init__(self, *args, **kwargs):
+        super(Counselor, self).__init__(*args, **kwargs)
+
     def __repr__(self):
         return '<Counselor %r>' % self.username if self.religiousname is None else self.religiousname
 
@@ -39,6 +42,9 @@ class LeadClassRecord(db.Model):
     update_user = db.Column(db.Integer)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
 
+    def __init__(self, *args, **kwargs):
+        super(LeadClassRecord, self).__init__(*args, **kwargs)
+
 
 class TrainingRecord(db.Model):
     __tablename__ = 'training_records'
@@ -54,6 +60,9 @@ class TrainingRecord(db.Model):
     update_user = db.Column(db.Integer)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
 
+    def __init__(self, *args, **kwargs):
+        super(TrainingRecord, self).__init__(*args, **kwargs)
+
 
 class EvaluationRecord(db.Model):
     __tablename__ = 'evaluation_records'
@@ -65,3 +74,6 @@ class EvaluationRecord(db.Model):
     create_time = db.Column(db.DateTime)
     update_user = db.Column(db.Integer)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __init__(self, *args, **kwargs):
+        super(EvaluationRecord, self).__init__(*args, **kwargs)

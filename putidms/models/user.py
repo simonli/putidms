@@ -21,6 +21,9 @@ class Role(db.Model):
     permissions = db.Column(db.Integer)
     users = db.relationship('User', backref='role', lazy='dynamic')
 
+    def __init__(self, *args, **kwargs):
+        super(Role, self).__init__(*args, **kwargs)
+
     @staticmethod
     def insert_roles():
         roles = {
@@ -56,8 +59,8 @@ class User(UserMixin, db.Model):
     is_active = db.Column(db.Boolean, nullable=False, default=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
-    def __init__(self, **kwargs):
-        super(User, self).__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(User, self).__init__(*args, **kwargs)
 
     def __repr__(self):
         return '<User %r>' % self.username

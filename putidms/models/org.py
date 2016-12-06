@@ -13,6 +13,9 @@ class Division(db.Model):
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
     departments = db.relationship('Department', backref='division', lazy='dynamic')
 
+    def __init__(self, *args, **kwargs):
+        super(Division, self).__init__(*args, **kwargs)
+
     def __repr__(self):
         return '<Division %r>' % self.name
 
@@ -27,6 +30,9 @@ class Department(db.Model):
     update_user = db.Column(db.Integer)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
     classes = db.relationship('Class', backref='department', lazy='dynamic')
+
+    def __init__(self, *args, **kwargs):
+        super(Department, self).__init__(*args, **kwargs)
 
     def __repr__(self):
         return '<Department %r>' % self.name
@@ -44,6 +50,9 @@ class Class(db.Model):
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
     counselors = db.relationship('Counselor', backref='cls', lazy='dynamic')
 
+    def __init__(self, *args, **kwargs):
+        super(Class, self).__init__(*args, **kwargs)
+
     def __repr__(self):
         return '<Class %r>' % self.name
 
@@ -57,6 +66,9 @@ class Duty(db.Model):
     update_user = db.Column(db.Integer)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
     counselors = db.relationship('Counselor', backref='duty', lazy='dynamic')
+
+    def __init__(self, *args, **kwargs):
+        super(Duty, self).__init__(*args, **kwargs)
 
     @staticmethod
     def insert_duties():

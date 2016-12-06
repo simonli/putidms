@@ -1,17 +1,24 @@
-{% macro render_field(field, label=None, label_visible=true, right_url=None, right_label=None) -%}
+{% macro render_field(field, left_class='', right_class='',label=None, label_visible=true ) -%}
     <div class="form-group {% if field.errors %}has-error{% endif %} {{ kwargs.pop('class_', '') }}">
         {% if field.type != 'HiddenField' and label_visible %}
             {% if not label %}{% set label=field.label.text %}{% endif %}
-            <label for="{{ field.id }}" class="control-label">{{ label|safe }}</label>
+            <label for="{{ field.id }}" class="control-label {{ left_class}}">{{ label|safe }}</label>
         {% endif %}
-        {{ field(class_='form-control', **kwargs) }}
-        {% if field.errors %}
-            {% for e in field.errors %}
-                <p class="help-block">{{ e }}</p>
-            {% endfor %}
+        {% if right_class !='' %}
+        <div class="{{ right_class }}">
+        {% endif %}
+            {{ field(class_='form-control', **kwargs) }}
+            {% if field.errors %}
+                {% for e in field.errors %}
+                    <p class="help-block">{{ e }}</p>
+                {% endfor %}
+            {% endif %}
+        {% if right_class !='' %}
+        </div>
         {% endif %}
     </div>
 {%- endmacro %}
+
 
 {% macro render_errors(field) -%}
     {% if field.errors %}
@@ -21,9 +28,15 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro render_submit_field(field, label=None) -%}
+{% macro render_submit_field(field, right_class='', label=None) -%}
     {% if not label %}{% set label=field.label.text %}{% endif %}
     <div class="form-group {% if field.errors %}has-error{% endif %} {{ kwargs.pop('class_', '') }}">
+        {% if right_class !='' %}
+        <div class="{{ right_class }}">
+        {% endif %}
         <input type="submit" class="form-control" value="{{label}}">
+        {% if right_class !='' %}
+        </div>
+        {% endif %}
     </div>
 {%- endmacro %}

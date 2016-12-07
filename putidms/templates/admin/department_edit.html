@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% from "_macros.html" import render_field, render_submit_field %}
+{% block content %}
+<div class="row">
+    <div class="col-md-offset-1 col-md-6">
+        <form action="{{ url_for('admin.department_edit',id=dept.id) }}" class="form-horizontal" role="form"
+              method="POST">
+            {{ form.csrf_token }}
+            {{ render_field(form.division_id,"col-md-3","col-md-9") }}
+            {{ render_field(form.name,"col-md-3","col-md-9", placeholder="修学点名称") }}
+            {{ render_field(form.desc,"col-md-3","col-md-9") }}
+            {{ render_submit_field(form.submit,"col-md-offset-3 col-md-3") }}
+        </form>
+    </div>
+</div>
+{% endblock %}

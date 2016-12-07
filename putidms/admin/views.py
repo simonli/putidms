@@ -16,7 +16,8 @@ def _add_numbers():
     return jsonify(d=a * b)
 
 
-@mod.route('/divsion/list')
+@mod.route('/division/list')
+@login_required
 @admin_required
 def division_list():
     divs = Division.query.all()
@@ -52,6 +53,11 @@ def division_edit(id):
         flash(u'修学处 %s 编辑成功！' % div.name, 'success')
         return redirect(url_for('admin.division_list'))
     return render_template('admin/division_edit.html', form=form, div=div)
+
+@mod.route('/division/delete/<int:id>',methods=['GET'])
+@admin_required
+def division_delete(id):
+    pass
 
 
 @mod.route('/department/list')
@@ -90,6 +96,11 @@ def department_edit(id):
         flash(u'修学点 %s 编辑成功！' % dept.name, 'success')
         return redirect(url_for('admin.department_list'))
     return render_template('admin/department_edit.html', form=form, dept=dept)
+
+@mod.route('/department/delete/<int:id>',methods=['GET'])
+@admin_required
+def department_delete(id):
+    pass
 
 
 @mod.route('/class/list')

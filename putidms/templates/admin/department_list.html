@@ -1,22 +1,24 @@
 {% extends 'base.html' %}
 {% from "_macros.html" import render_field, render_submit_field %}
 {% block content %}
-{% if divs %}
+{% if depts %}
 <div class="row">
     <div class="col-md-offset-1 col-md-8">
         <table class="table table-bordered">
             <tr>
-                <td>名称</td>
+                <td>修学处</td>
+                <td>修学点</td>
                 <td>描述</td>
                 <td>修改/删除</td>
             </tr>
-            {% for div in divs %}
+            {% for dept in depts %}
             <tr>
-                <td>{{ div.name }}</td>
-                <td>{{ div.desc }}</td>
+                <td>{{ dept.division.name }}</td>
+                <td>{{ dept.name }}</td>
+                <td>{{ dept.desc }}</td>
                 <td>
-                    <a href="{{ url_for('admin.division_edit',id=div.id) }}">编辑</a>|
-                    <a href="{{ url_for('admin.division_delete',id=div.id) }}">删除</a>
+                    <a href="{{ url_for('admin.department_edit',id=dept.id) }}">编辑</a>|
+                    <a href="{{ url_for('admin.department_delete',id=dept.id) }}">删除</a>
                 </td>
             </tr>
             {% endfor %}

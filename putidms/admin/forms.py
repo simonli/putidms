@@ -40,9 +40,15 @@ class DepartmentForm(FlaskForm):
             raise ValidationError(u'请选择所属修学处。')
 
     def validate_name(self, field):
-        if field.data != self.department.name and \
+        if self.department:
+            if field.data != self.department.name and \
                 Department.query.filter_by(name=field.data).first():
-            raise ValidationError(u'修学点名称已存在。')
+                raise ValidationError(u'修学点名称已存在。')
+        else:
+            if Department.query.filter_by(name=field.data).first():
+                raise ValidationError(u'修学点名称已存在。')
+
+
 
 
 class ClassForm(FlaskForm):

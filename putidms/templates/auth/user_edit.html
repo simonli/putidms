@@ -6,7 +6,6 @@
         <form action="{{ url_for('auth.user_edit',id=user.id) }}" method="post" class="form-horizontal" role="form">
             {{ form.csrf_token }}
             {{ render_field(form.username,"col-md-3","col-md-9") }}
-            {{ render_field(form.password,"col-md-3","col-md-9") }}
             {{ render_field(form.realname,"col-md-3","col-md-9") }}
             {{ render_field(form.email,"col-md-3","col-md-9") }}
             {{ render_field(form.role_id,"col-md-3","col-md-9") }}

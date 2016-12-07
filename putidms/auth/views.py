@@ -58,7 +58,6 @@ def user_add():
         user.create_time = datetime.utcnow()
         user.last_login_time = datetime.utcnow()
         user.last_login_ip = request.remote_addr
-
         db.session.add(user)
         db.session.commit()
         flash(u'新增用户成功！', 'success')
@@ -70,6 +69,7 @@ def user_add():
 def user_edit(id):
     user = User.query.get(id)
     form = UserForm(obj=user)
+    form.__delitem__("password")
     if form.validate_on_submit():
         form.populate_obj(user)
         db.session.add(user)
@@ -80,6 +80,7 @@ def user_edit(id):
 
 
 @mod.route('/user/delete/<int:id>', methods=['GET'])
+@login_required
 def user_delete(id):
     user = User.query.get(id)
     user.is_delete = 1

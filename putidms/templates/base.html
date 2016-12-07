@@ -17,32 +17,6 @@
             <p class="lead signature">Sample2</p>
         </div>
     </div>
-    <!--<div class="header-nav">-->
-        <!--<div class="container">-->
-            <!--<ol class="breadcrumb">-->
-                <!--<li><a href="{{ url_for('main.index') }}"><span class="glyphicon glyphicon-home"> 首页</span></a>-->
-                <!--</li>-->
-                <!--<li><a href="#">Library</a></li>-->
-                <!--<li class="active">Data</li>-->
-                <!--{% if current_user.is_authenticated %}-->
-                <!--<li class="dropdown">-->
-                    <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown">-->
-                        <!--<span class="glyphicon glyphicon-user"> {{ current_user.username }} </span><b-->
-                            <!--class="caret"></b>-->
-                    <!--</a>-->
-                    <!--<ul class="dropdown-menu">-->
-                        <!--<li><a href="">发表博文</a></li>-->
-                        <!--<li><a href="{{ url_for('auth.user_edit',id=current_user.id) }}">管理博客</a></li>-->
-                        <!--<li><a href="{{ url_for('auth.logout') }}">退出登陆</a></li>-->
-                    <!--</ul>-->
-                <!--</li>-->
-                <!--{% endif %}-->
-            <!--</ol>-->
-
-        <!--</div>-->
-    <!--</div>-->
-
-
 </header>
 <div class="container">
     <div class="row" id="content2">
@@ -59,7 +33,7 @@
             </div>
             {% endblock %}
         </div>
-        <div class="col-md-10">
+        <div class="col-md-8" style="margin-left: 20px">
             <div class="row">
                 {% block flash %}
                 {% for category, message in get_flashed_messages(with_categories=true) %}
@@ -71,7 +45,9 @@
                 {% endblock %}
             </div>
             <div class="row">
-                {% block content %}{% endblock %}
+                <div class="col-md-12">
+                    {% block content %}{% endblock %}
+                </div>
             </div>
         </div>
     </div>

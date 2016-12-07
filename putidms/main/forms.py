@@ -11,14 +11,14 @@ class CounselorForm(FlaskForm):
     username = StringField(u'姓名', validators=[ir(u'姓名不能为空。')])
     religiousname = StringField(u'法名')
     gender = SelectField(u'性别', coerce=str, choices=[('M', u'男'), ('F', u'女')], validators=[])
-    birthday = DateField(u'生日', format='%Y-%m-%d')
-    mobile = StringField(u'手机', validators=[ir(u'手机不能为空。')])
+    birthday = DateField(u'生日', format='%Y-%m-%d', validators=[ir(u'生日不能为空。')])
+    mobile = StringField(u'手机', validators=[ir(u'手机号码不能为空。')])
     email = StringField(u'Email', validators=[email(u'Email格式不正确')])
     division_id = SelectField(u'修学处', coerce=int)
     department_id = SelectField(u'修学点', coerce=int)
     class_id = SelectField(u'班级', coerce=int)
     duty_id = SelectField(u'岗位', coerce=int)
-    submit = SubmitField(u'添加')
+    submit = SubmitField(u'提交')
 
     def __init__(self, *args, **kwargs):
         super(CounselorForm, self).__init__(*args, **kwargs)
@@ -44,6 +44,22 @@ class CounselorForm(FlaskForm):
             self.class_id.choices.default = self.counselor.cls.id
             self.department_id.default = self.counselor.department.id
             self.division_id.choices.default = self.counselor.department.division.id
+
+    def validate_division_id(self, field):
+        if field.data <= 0:
+            raise ValidationError(u'请选择修学处。')
+
+    def validate_department_id(self, field):
+        if field.data <= 0:
+            raise ValidationError(u'请选择修学点')
+
+    def validate_class_id(self, field):
+        if field.data <= 0:
+            raise ValidationError(u'请选择班级')
+
+    def validate_duty_id(self, field):
+        if field.data <= 0:
+            raise ValidationError(u'请选择岗位')
 
 
 class LeadClassRecordForm(FlaskForm):

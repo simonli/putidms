@@ -8,7 +8,7 @@ class Division(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), index=True, unique=True, nullable=False)
     desc = db.Column(db.Text)
-    create_time = db.Column(db.DateTime, default=datetime.utcfromtimestamp)
+    create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_user = db.Column(db.Integer)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
     departments = db.relationship('Department', backref='division', lazy='dynamic')
@@ -81,7 +81,7 @@ class Duty(db.Model):
             duty = Duty.query.filter_by(name=r).first()
             if duty is None:
                 duty = Duty(name=r)
-            duty.desc = duty[r][0]
+            duty.desc = duties[r][0]
             duty.create_time = datetime.utcnow()
             duty.update_user = 'liq'
             duty.update_time = datetime.utcnow()

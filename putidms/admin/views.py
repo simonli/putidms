@@ -27,9 +27,9 @@ def division_list():
 @login_required
 @admin_required
 def division_add():
-    form = DivisionForm()
+    div = Division()
+    form = DivisionForm(obj=div)
     if form.validate_on_submit():
-        div = Division()
         div.name = form.name.data
         div.desc = form.desc.data
         div.update_user = current_user.id

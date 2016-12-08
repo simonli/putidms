@@ -2,7 +2,7 @@
 from wtforms import StringField, TextAreaField, SelectField, SubmitField, ValidationError
 from wtforms.validators import input_required as ir
 from flask_wtf import FlaskForm
-from putidms.models.org import Division, Department, Duty
+from putidms.models.org import Division, Department, Class, Duty
 
 
 class DivisionForm(FlaskForm):
@@ -42,20 +42,18 @@ class DepartmentForm(FlaskForm):
     def validate_name(self, field):
         if self.department:
             if field.data != self.department.name and \
-                Department.query.filter_by(name=field.data).first():
+                    Department.query.filter_by(name=field.data).first():
                 raise ValidationError(u'修学点名称已存在。')
         else:
             if Department.query.filter_by(name=field.data).first():
                 raise ValidationError(u'修学点名称已存在。')
 
 
-
-
 class ClassForm(FlaskForm):
     division_id = SelectField(u'所属修学处', coerce=int)
     department_id = SelectField(u'所属修学点', coerce=int)
     name = StringField(u'班级名称', validators=[ir(u'名称不能为空。')])
-    number = StringField(u'班级编号', validators=[ir(u'名称不能为空。')])  # 班级编号
+    number = StringField(u'班级编号', validators=[ir(u'班级编号不能为空。')])  # 班级编号
     desc = TextAreaField(u'简要描述')
     submit = SubmitField(u'提交')
 
@@ -64,8 +62,14 @@ class ClassForm(FlaskForm):
         division_choices = [(r.id, r.name) for r in Division.query.order_by(Division.name).all()]
         division_choices.insert(0, (0, u'请选择所属修学处'))
         self.division_id.choices = division_choices
+
+        dept_choices = [(r.id, r.name) for r in Department.query.order_by(Department.name).all()]
+        dept_choices.insert(0, (0, u'请选择所属修学点'))
+        self.department_id.choices = dept_choices
+
         self.cls = kwargs.get('obj')
         if self.cls:
+            print "*"*100
             self.department_id.choices.default = self.cls.department.id
             self.division_id.default = self.cls.department.division.id
 
@@ -78,9 +82,22 @@ class ClassForm(FlaskForm):
             raise ValidationError(u'请选择所属修学点。')
 
     def validate_name(self, field):
-        if field.data != self.department.name and \
-                Department.query.filter_by(name=field.data).first():
-            raise ValidationError(u'修学点名称已存在。')
+        if self.cls:
+            if field.data != self.cls.name and \
+                    Class.query.filter_by(name=field.data).first():
+                raise ValidationError(u'班级名称已存在。')
+        else:
+            if Class.query.filter_by(name=field.data).first():
+                raise ValidationError(u'班级名称已存在。')
+
+    def validate_number(self, field):
+        if self.cls:
+            if field.data != self.cls.number and \
+                    Class.query.filter_by(number=field.data).first():
+                raise ValidationError(u'班级编号已存在。')
+        else:
+            if Class.query.filter_by(number=field.data).first():
+                raise ValidationError(u'班级编号已存在。')
 
 
 class DutyForm(FlaskForm):

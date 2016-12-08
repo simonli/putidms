@@ -44,7 +44,7 @@ def division_add():
 @mod.route('/division/edit/<int:id>', methods=['GET', 'POST'])
 @admin_required
 def division_edit(id):
-    div = Division.query.get(id)
+    div = Division.query.get_or_404(id)
     form = DivisionForm(obj=div)
     if form.validate_on_submit():
         form.populate_obj(div)
@@ -87,7 +87,7 @@ def department_add():
 @mod.route('/department/edit/<int:id>', methods=['GET', 'POST'])
 @admin_required
 def department_edit(id):
-    dept = Department.query.get(id)
+    dept = Department.query.get_or_404(id)
     form = DepartmentForm(obj=dept)
     if form.validate_on_submit():
         form.populate_obj(dept)
@@ -111,13 +111,13 @@ def class_list():
 
 
 @mod.route('/class/add', methods=['GET', 'POST'])
-@admin_required
 def class_add():
     form = ClassForm()
     if form.validate_on_submit():
         c = Class()
         c.name = form.name.data
         c.desc = form.desc.data
+        c.number = form.number.data
         c.department = Department.query.get(form.department_id.data)
         c.update_user = current_user.id
         db.session.add(c)
@@ -178,14 +178,17 @@ def duty_edit(id):
     return render_template('admin/duty_edit.html', form=form, duty=duty)
 
 
-@mod.route('/admin/_get_departments', methods=['POST'])
+@mod.route('/_get_departments', methods=['POST'])
 def _department_query():
+    print "#"*100
     division_id = request.form.get('division_id', 0, type=int)
+    print division_id
+    print "@"*100
     depts = Division.query.get(division_id).departments
-    return jsonify(departments=depts)
+    return jsonify(depts=depts)
 
 
-@mod.route('/admin/_get_classes', methods=['POST'])
+@mod.route('/_get_classes', methods=['POST'])
 def _class_query():
     dept_id = request.form.get('department_id', 0, type=int)
     classes = Department.query.get(dept_id).classes

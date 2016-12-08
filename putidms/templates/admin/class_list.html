@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% from "_macros.html" import render_field, render_submit_field %}
+{% block content %}
+{% if divs %}
+<div class="row">
+    <div class="col-md-offset-1 col-md-8">
+        <table class="table table-bordered">
+            <tr>
+                <td>名称</td>
+                <td>描述</td>
+                <td>修改/删除</td>
+            </tr>
+            {% for div in divs %}
+            <tr>
+                <td>{{ div.name }}</td>
+                <td>{{ div.desc }}</td>
+                <td>
+                    <a href="{{ url_for('admin.division_edit',id=div.id) }}">编辑</a>|
+                    <a href="{{ url_for('admin.division_delete',id=div.id) }}">删除</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

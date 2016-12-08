@@ -54,7 +54,8 @@ def division_edit(id):
         return redirect(url_for('admin.division_list'))
     return render_template('admin/division_edit.html', form=form, div=div)
 
-@mod.route('/division/delete/<int:id>',methods=['GET'])
+
+@mod.route('/division/delete/<int:id>', methods=['GET'])
 @admin_required
 def division_delete(id):
     pass
@@ -97,7 +98,8 @@ def department_edit(id):
         return redirect(url_for('admin.department_list'))
     return render_template('admin/department_edit.html', form=form, dept=dept)
 
-@mod.route('/department/delete/<int:id>',methods=['GET'])
+
+@mod.route('/department/delete/<int:id>', methods=['GET'])
 @admin_required
 def department_delete(id):
     pass
@@ -180,12 +182,12 @@ def duty_edit(id):
 
 @mod.route('/_get_departments', methods=['POST'])
 def _department_query():
-    print "#"*100
+    print "#" * 100
     division_id = request.form.get('division_id', 0, type=int)
     print division_id
-    print "@"*100
-    depts = Division.query.get(division_id).departments
-    return jsonify(depts=depts)
+    print "@" * 100
+    depts = Department.query.filter_by(division_id=division_id).all()
+    return jsonify(depts=[d.to_json() for d in depts])
 
 
 @mod.route('/_get_classes', methods=['POST'])

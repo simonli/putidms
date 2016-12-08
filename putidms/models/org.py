@@ -37,6 +37,9 @@ class Department(db.Model):
     def __repr__(self):
         return '<Department %r>' % self.name
 
+    def to_json(self):
+        return {'id': self.id, 'name': self.name, 'desc': self.desc}
+
 
 class Class(db.Model):
     __tablename__ = 'classes'

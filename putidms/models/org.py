@@ -59,13 +59,16 @@ class Class(db.Model):
     def __repr__(self):
         return '<Class %r>' % self.name
 
+    def to_json(self):
+        return {'id': self.id, 'name': self.name, 'desc': self.desc, 'number': self.number}
+
 
 class Duty(db.Model):
     __tablename__ = 'duties'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(200), nullable=False, index=True, unique=True)
     desc = db.Column(db.String(255))
-    create_time = db.Column(db.DateTime)
+    create_time = db.Column(db.DateTime,default=datetime.utcnow)
     update_user = db.Column(db.Integer)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
     counselors = db.relationship('Counselor', backref='duty', lazy='dynamic')

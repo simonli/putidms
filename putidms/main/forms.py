@@ -5,6 +5,8 @@ from wtforms import ValidationError
 from flask_wtf import FlaskForm
 from putidms.models.counselor import Counselor, LeadClassRecord, TrainingRecord, EvaluationRecord
 from putidms.models.org import Division, Department, Class, Duty
+from putidms import db
+
 
 
 class CounselorForm(FlaskForm):
@@ -27,11 +29,13 @@ class CounselorForm(FlaskForm):
         division_choices.insert(0, (0, u'请选择所属修学处'))
         self.division_id.choices = division_choices
 
-        department_choices = [(r.id, r.name) for r in Department.query.order_by(Department.name).all()]
+        department_choices = [(r.id, r.name) for r in
+                              Department.query.filter_by(division_id=self.division_id.data).order_by(Department.name).all()]
         department_choices.insert(0, (0, u'请选择所属修学点'))
         self.department_id.choices = department_choices
 
-        class_choices = [(r.id, r.name) for r in Class.query.order_by(Class.name).all()]
+        class_choices = [(r.id, r.name) for r in
+                         Class.query.filter_by(department_id=self.department_id.data).order_by(Class.name).all()]
         class_choices.insert(0, (0, u'请选择所属班级'))
         self.class_id.choices = class_choices
 
@@ -60,6 +64,15 @@ class CounselorForm(FlaskForm):
     def validate_duty_id(self, field):
         if field.data <= 0:
             raise ValidationError(u'请选择岗位')
+
+    def validate_username(self,field):
+        if self.counselor:
+            pass
+        else:
+            cs = Counselor.query.filter_by(username=self.username).filter_by(religiousname=self.religiousname).count()
+            if cs>0:
+                raise ValidationError(u'用用户+法名 重复，请改变后重新提交')
+
 
 
 class LeadClassRecordForm(FlaskForm):

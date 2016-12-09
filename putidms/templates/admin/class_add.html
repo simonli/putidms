@@ -17,26 +17,5 @@
 {% endblock %}
 
 {% block js %}
-    <script type="text/javascript">
-        function get_dept_list() {
-            var division_id = $("#division_id").val();
-            if (division_id > 0) {
-                $("#departmen_id").empty();
-                $.ajax({
-                    url: '/admin/_get_departments',
-                    type: 'POST',
-                    data: {'division_id': division_id},
-                    success: function (data) {
-                        var res = data.depts;
-                        $("#department_id").append("<option value='0'>请选择所属修学点</option>");
-                        for (var d in data.depts) {
-                            alert(d);
-                            $("#department_id").append("<option value='" + d['id'] + "'>" + d['name'] + "</option>");
-                        }
-                    }
-                })
-            }
-
-        }
-    </script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 {% endblock %}

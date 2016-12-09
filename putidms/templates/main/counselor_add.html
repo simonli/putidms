@@ -1,23 +1,62 @@
 {% extends 'base.html' %}
 {% from "_macros.html" import render_field, render_errors, render_submit_field %}
 {% block content %}
-<div class="row">
-    <div class="col-md-offset-1 col-md-6">
-        <form action="{{ url_for('main.counselor_add') }}" class="form-horizontal" role="form" method="POST">
-            {{ form.csrf_token }}
-            {{ render_field(form.username,"col-md-3","col-md-9", placeholder="真实姓名") }}
-            {{ render_field(form.religiousname,"col-md-3","col-md-9",placeholder="皈依法名") }}
-            {{ render_field(form.gender,"col-md-3","col-md-9") }}
-            {{ render_field(form.birthday,"col-md-3","col-md-9") }}
-            {{ render_field(form.mobile,"col-md-3","col-md-9", placeholder="填写11位手机号码") }}
-            {{ render_field(form.email,"col-md-3","col-md-9", placeholder="填写正确格式的Email") }}
-            {{ render_field(form.division_id,"col-md-3","col-md-9") }}
-            {{ render_field(form.department_id,"col-md-3","col-md-9") }}
-            {{ render_field(form.class_id,"col-md-3","col-md-9") }}
-            {{ render_field(form.duty_id,"col-md-3","col-md-9") }}
-            {{ render_submit_field(form.submit,"col-md-offset-3 col-md-2") }}
-        </form>
-    </div>
-</div>
+    <form action="{{ url_for('main.counselor_add') }}" class="form-horizontal" role="form" method="POST">
+        {{ form.csrf_token }}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    {{ render_field(form.username,"col-md-3","col-md-9", placeholder="真实姓名") }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    {{ render_field(form.religiousname,"col-md-3","col-md-9",placeholder="皈依法名") }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    {{ render_field(form.birthday,"col-md-3","col-md-9",onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd' ,name:'ext',	charset:'gb2312'})") }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    {{ render_field(form.gender,"col-md-3","col-md-9") }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    {{ render_field(form.mobile,"col-md-3","col-md-9", placeholder="填写11位手机号码") }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    {{ render_field(form.email,"col-md-3","col-md-9", placeholder="填写正确格式的Email") }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    {{ render_field(form.division_id,"col-md-3","col-md-9",onChange="get_dept_list()" ) }}
+                    {{ render_field(form.department_id,"col-md-3","col-md-9",onChange="get_class_list()") }}
+                    {{ render_field(form.class_id,"col-md-3","col-md-9") }}
+                    {{ render_field(form.duty_id,"col-md-3","col-md-9") }}
+                    {{ render_submit_field(form.submit,"col-md-offset-3 col-md-4") }}
+                </div>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
 
+    </form>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='My97DatePicker/WdatePicker.js') }}"></script>
 {% endblock %}

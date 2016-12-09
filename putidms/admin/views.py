@@ -124,7 +124,7 @@ def class_add():
         c.update_user = current_user.id
         db.session.add(c)
         db.session.commit()
-        flash(u'成功添加班级: %s!' % c.name, 'success')
+        flash(u'成功添加班级: <b>%s - %s - %s</b>' % (c.department.division.name, c.department.name, c.name), 'success')
         return redirect(url_for('admin.class_list'))
     return render_template('admin/class_add.html', form=form)
 
@@ -182,16 +182,13 @@ def duty_edit(id):
 
 @mod.route('/_get_departments', methods=['POST'])
 def _department_query():
-    print "#" * 100
     division_id = request.form.get('division_id', 0, type=int)
-    print division_id
-    print "@" * 100
     depts = Department.query.filter_by(division_id=division_id).all()
-    return jsonify(depts=[d.to_json() for d in depts])
+    return jsonify(result=[d.to_json() for d in depts])
 
 
 @mod.route('/_get_classes', methods=['POST'])
 def _class_query():
     dept_id = request.form.get('department_id', 0, type=int)
-    classes = Department.query.get(dept_id).classes
-    return jsonify(classes=classes)
+    classes = Class.query.filter_by(department_id=dept_id).all()
+    return jsonify(result=[c.to_json() for c in classes])

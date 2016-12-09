@@ -63,13 +63,12 @@ class ClassForm(FlaskForm):
         division_choices.insert(0, (0, u'请选择所属修学处'))
         self.division_id.choices = division_choices
 
-        dept_choices = [(r.id, r.name) for r in Department.query.order_by(Department.name).all()]
+        dept_choices = [(r.id, r.name) for r in Department.query.filter_by(division_id=self.division_id.data).order_by(Department.name).all()]
         dept_choices.insert(0, (0, u'请选择所属修学点'))
         self.department_id.choices = dept_choices
 
         self.cls = kwargs.get('obj')
         if self.cls:
-            print "*"*100
             self.department_id.choices.default = self.cls.department.id
             self.division_id.default = self.cls.department.division.id
 

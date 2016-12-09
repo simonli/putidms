@@ -69,7 +69,7 @@ def user_add():
 def user_edit(id):
     user = User.query.get(id)
     form = UserForm(obj=user)
-    form.__delitem__("password")
+    del form.password
     if form.validate_on_submit():
         form.populate_obj(user)
         db.session.add(user)

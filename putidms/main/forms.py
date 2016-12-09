@@ -1,12 +1,11 @@
 # -*- coding:utf-8 -*-
-from wtforms import StringField, TextAreaField, SelectField, DateField, IntegerField, SubmitField
-from wtforms.validators import input_required as ir, email
-from wtforms import ValidationError
 from flask_wtf import FlaskForm
-from putidms.models.counselor import Counselor, LeadClassRecord, TrainingRecord, EvaluationRecord
-from putidms.models.org import Division, Department, Class, Duty
-from putidms import db
+from wtforms import StringField, TextAreaField, SelectField, DateField, IntegerField, SubmitField
+from wtforms import ValidationError
+from wtforms.validators import input_required as ir, email
 
+from putidms.models.counselor import Counselor
+from putidms.models.org import Division, Department, Class, Duty
 
 
 class CounselorForm(FlaskForm):

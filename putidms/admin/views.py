@@ -108,7 +108,7 @@ def department_delete(id):
 @mod.route('/class/list')
 @admin_required
 def class_list():
-    classes = Class.query.all()
+    classes = Class.query.order_by(Class.name).all()
     return render_template('admin/class_list.html', classes=classes)
 
 
@@ -141,6 +141,11 @@ def class_edit(id):
         flash(u'班级 %s 编辑成功！' % c.name, 'success')
         return redirect(url_for('admin.class_list'))
     return render_template('admin/class_edit.html', form=form, cls=c)
+
+@mod.route('/class/delete/<int:id>')
+@admin_required
+def class_delete(id):
+    pass
 
 
 @mod.route('/duty/list')

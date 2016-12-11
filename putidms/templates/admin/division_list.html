@@ -16,11 +16,11 @@
                             <td>{{ div.desc }}</td>
                             <td>
                                 <a href="{{ url_for('admin.division_edit',id=div.id) }}" title="编辑">
-                                    <span class="glyphicon glyphicon-pencil"></span>
-                                </a>
+                                    <span class="glyphicon glyphicon-pencil"></span>编辑
+                                </a>|
                                 <a href="javascript:void(0);" title="删除修学处"
                                    onclick="confirm_delete('{{ url_for("admin.division_delete",id=div.id) }}');">
-                                    <span class="glyphicon glyphicon-trash"></span>
+                                    <span class="glyphicon glyphicon-trash"></span>删除
                                 </a>
                             </td>
                         </tr>

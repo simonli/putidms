@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% from "_macros.html" import render_field, render_errors, render_submit_field %}
 {% block content %}
-    <form action="{{ url_for('main.counselor_add') }}" class="form-horizontal" role="form" method="POST">
+    <form action="{{ url_for('main.counselor_edit',id=counselor.id) }}" class="form-horizontal" role="form" method="POST">
         {{ form.csrf_token }}
         <div class="row">
             <div class="col-md-6">

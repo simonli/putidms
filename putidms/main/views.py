@@ -61,7 +61,7 @@ def counselor_add():
 @mod.route('/counselor/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def counselor_edit(id):
-    c = Counselor.query.get(id)
+    c = Counselor.query.get_or_404(id)
     form = CounselorForm(obj=c)
     if form.validate_on_submit():
         form.populate_obj(c)
@@ -72,19 +72,22 @@ def counselor_edit(id):
     return render_template('main/counselor_edit.html', form=form, counselor=c)
 
 
-@mod.route('/counselor/delete/<int:id>')
-def counselor_delete(id):
+@mod.route('/_counselor/delete', methods=['POST'])
+@login_required
+def _counselor_delete():
+    id = request.args.get('id', 0, type=int)
     c = Counselor.query.get(id)
     c.is_delete = 1
     db.session.add(c)
     db.session.commit()
     flash(u'成功删除辅导/助员：%s' % c.username, 'success')
-    return redirect(url_for('.counselor_list'))
+    return jsonify(result='OK')
 
 
-@mod.route('/counselor/_counselor_query', methods=['POST'])
-def _counselor_query():
+@mod.route('/counselor/search', methods=['POST'])
+def counselor_search():
     query_str = '%' + request.form.get('query_str') + '%'
-    rule = db.or_(Counselor.username.like(query_str), Counselor.religiousname.like(query_str))
-    counselors = Counselor.query.filter(rule).all()
-    return jsonify(counselors=counselors)
+    rule = db.or_(Counselor.username.like(query_str), Counselor.religiousname.like(query_str), \
+                  Counselor.email.like(query_str), Counselor.mobile.like(query_str))
+    counselors = Counselor.query.filter(rule).filter_by(is_delete=0).order_by(Counselor.update_time.desc()).all()
+    return render_template('main/counselor_list.html', counselors=counselors, query_str=request.form.get('query_str'))

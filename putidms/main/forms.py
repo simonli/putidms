@@ -46,9 +46,13 @@ class CounselorForm(FlaskForm):
 
         self.counselor = kwargs.get('obj')
         if self.counselor:
-            self.class_id.choices.default = self.counselor.cls.id
-            self.department_id.default = self.counselor.department.id
-            self.division_id.choices.default = self.counselor.department.division.id
+            print '*'*100
+            print self.counselor.cls.id
+            print '#'*100
+            self.class_id.default = self.counselor.class_id
+            self.department_id.default = self.counselor.cls.department.id
+            self.division_id.default = self.counselor.cls.department.division.id
+            self.duty_id.default = self.counselor.duty.id
 
     def validate_division_id(self, field):
         if field.data <= 0:

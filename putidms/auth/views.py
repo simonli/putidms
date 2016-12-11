@@ -19,7 +19,7 @@ def login():
                 login_user(user)
                 user.update_login_info(request.remote_addr)
                 flash(u'登陆成功！欢迎回来，%s!' % user.realname, 'success')
-                return redirect(request.form["next"] or url_for('main.index'))
+                return redirect(request.form.get("next") or url_for('main.index'))
             else:
                 flash(u'密码不正确。', 'danger')
         else:

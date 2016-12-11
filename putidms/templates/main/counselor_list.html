@@ -2,47 +2,118 @@
 {% block content %}
     <div class="row">
         <div class="col-md-12">
+            <div class="row">
+                <form action="{{ url_for('main.counselor_search') }}" method="post" role="form" class="form-horizontal">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <input class="form-control" type="text" id="query_str" name="query_str"
+                                   value="{{ query_str }}"
+                                   placeholder="姓名,法名,Email,手机">
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-default">
+                            <span class="glyphicon glyphicon-search"></span> 查找
+                        </button>
+                    </div>
+                </form>
+                <div class="col-md-2">
+                    <a class="btn btn-default" href="{{ url_for('main.counselor_add') }}" role="button">
+                        <span class="glyphicon glyphicon-plus"></span> 新增辅导员
+                    </a>
+                </div>
+            </div>
             {% if counselors %}
-                <table class="table table-bordered">
-                    <tr>
-                        <td>姓名</td>
-                        <td>法名</td>
-                        <td>性别</td>
-                        <td>生日</td>
-                        <td>手机</td>
-                        <td>Email</td>
-                        <td>修学处</td>
-                        <td>修学点</td>
-                        <td>班级</td>
-                        <td>岗位</td>
-                        <td>带班</td>
-                        <td>培训</td>
-                        <td>考核</td>
-                        <td>修改/删除</td>
-                    </tr>
-                    {% for c in counselors %}
-                        <tr>
-                            <td>{{ c.username }}</td>
-                            <td>{{ c.religiousname }}</td>
-                            <td>{{ c.gender }}</td>
-                            <td>{{ c.birthday }}</td>
-                            <td>{{ c.mobile }}</td>
-                            <td>{{ c.email }}</td>
-                            <td>{{ c.cls.department.division.name }}</td>
-                            <td>{{ c.cls.department.name }}</td>
-                            <td>{{ c.cls.name }}</td>
-                            <td>{{ c.duty.name }}</td>
+                <div class="row">
+                    <table class="table table-bordered">
+                        <tr class="active">
+                            <td>姓名</td>
+                            <td>法名</td>
+                            <td>性别</td>
+                            <td>生日</td>
+                            <td>手机</td>
+                            <td>Email</td>
+                            <td>修学处</td>
+                            <td>修学点</td>
+                            <td>班级</td>
+                            <td>岗位</td>
                             <td>带班</td>
                             <td>培训</td>
                             <td>考核</td>
-                            <td>
-                                <a href="{{ url_for('main.counselor_edit',id=c.id) }}">编辑</a>|
-                                <a href="{{ url_for('main.counselor_delete',id=c.id) }}">删除</a>
-                            </td>
+                            <td>操作</td>
                         </tr>
-                    {% endfor %}
-                </table>
+                        {% for c in counselors %}
+                            <tr>
+                                <td>{{ c.username }}</td>
+                                <td>{{ c.religiousname }}</td>
+                                <td>{{ c.gender }}</td>
+                                <td>{{ c.birthday }}</td>
+                                <td>{{ c.mobile }}</td>
+                                <td>{{ c.email }}</td>
+                                <td>{{ c.cls.department.division.name }}</td>
+                                <td>{{ c.cls.department.name }}</td>
+                                <td>{{ c.cls.name }}</td>
+                                <td>{{ c.duty.name }}</td>
+                                <td>带班</td>
+                                <td>培训</td>
+                                <td>考核</td>
+                                <td>
+                                    <a href="{{ url_for('main.counselor_edit',id=c.id) }}" title="编辑">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </a>
+                                    <a href="javascript:void(0);" title="删除辅导员" onclick="confirm_delete('{{ c.id }}','{{ c.username }}');">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% else %}
+                <div class="row">
+                    <div class="col-md-12">
+                        没有找到相关资料！
+                    </div>
+                </div>
             {% endif %}
         </div>
     </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        function confirm_delete(id,username) {
+            $.confirm({
+                title: '⚠️ 警告',
+                content: '确认删除辅导员: '+username+' 吗？',
+                type: 'red',
+                typeAnimated: true,
+                buttons: {
+                    confirm: {
+                        text: '删除',
+                        btnClass: 'btn-danger',
+                        action: function () {
+                            $.ajax({
+                                url: '/_counselor/delete',
+                                type: 'POST',
+                                data: {'id': id},
+                                success: function (data) {
+                                    if(data.result == 'OK'){
+                                        window.location.href('{{ url_for('main.counselor_list') }}');
+                                    }
+
+                                }
+                            });
+                        }
+                    },
+                    cancel: {
+                        text: '取消',
+                        btnClass: 'btn-default',
+                        action: function () {
+                        }
+                    }
+                }
+            });
+        }
+    </script>
 {% endblock %}

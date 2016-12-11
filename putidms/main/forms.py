@@ -29,14 +29,18 @@ class CounselorForm(FlaskForm):
         division_choices.insert(0, (0, u'请选择所属修学处'))
         self.division_id.choices = division_choices
 
-        department_choices = [(r.id, r.name) for r in
-                              Department.query.filter_by(division_id=self.division_id.data).order_by(
-                                  Department.name).all()]
+        department_choices = [(r.id, r.name) for r in Department.query.order_by(Department.name).all()]
+        if self.division_id.data:
+            department_choices = [(r.id, r.name) for r in
+                                  Department.query.filter_by(division_id=self.division_id.data).order_by(
+                                      Department.name).all()]
         department_choices.insert(0, (0, u'请选择所属修学点'))
         self.department_id.choices = department_choices
 
-        class_choices = [(r.id, r.name) for r in
-                         Class.query.filter_by(department_id=self.department_id.data).order_by(Class.name).all()]
+        class_choices = [(r.id, r.name) for r in Class.query.order_by(Class.name).all()]
+        if self.department_id.data:
+            class_choices = [(r.id, r.name) for r in
+                             Class.query.filter_by(department_id=self.department_id.data).order_by(Class.name).all()]
         class_choices.insert(0, (0, u'请选择所属班级'))
         self.class_id.choices = class_choices
 
@@ -46,13 +50,13 @@ class CounselorForm(FlaskForm):
 
         self.counselor = kwargs.get('obj')
         if self.counselor:
-            print '*'*100
-            print self.counselor.cls.id
-            print '#'*100
             self.class_id.default = self.counselor.class_id
-            self.department_id.default = self.counselor.cls.department.id
-            self.division_id.default = self.counselor.cls.department.division.id
-            self.duty_id.default = self.counselor.duty.id
+            print '8'*100
+            print self.counselor.cls.department_id
+            print '9'*100
+            self.department_id.default = 1#self.counselor.cls.department_id
+            self.division_id.default = self.counselor.cls.department.division_id
+            self.duty_id.default = self.counselor.duty_id
 
     def validate_division_id(self, field):
         if field.data <= 0:

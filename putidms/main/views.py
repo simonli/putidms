@@ -72,16 +72,15 @@ def counselor_edit(id):
     return render_template('main/counselor_edit.html', form=form, counselor=c)
 
 
-@mod.route('/_counselor/delete', methods=['POST'])
+@mod.route('/counselor/delete/<int:id>')
 @login_required
-def _counselor_delete():
-    id = request.args.get('id', 0, type=int)
+def counselor_delete(id):
     c = Counselor.query.get(id)
     c.is_delete = 1
     db.session.add(c)
     db.session.commit()
     flash(u'成功删除辅导/助员：%s' % c.username, 'success')
-    return jsonify(result='OK')
+    return redirect(url_for('.counselor_list'))
 
 
 @mod.route('/counselor/search', methods=['POST'])

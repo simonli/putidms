@@ -61,7 +61,7 @@
                                     <a href="{{ url_for('main.counselor_edit',id=c.id) }}" title="编辑">
                                         <span class="glyphicon glyphicon-pencil"></span>
                                     </a>
-                                    <a href="javascript:void(0);" title="删除辅导员" onclick="confirm_delete('{{ c.id }}','{{ c.username }}');">
+                                    <a href="javascript:void(0);" title="删除辅导员" onclick="confirm_delete('{{ url_for("main.counselor_delete",id=c.id) }}');">
                                         <span class="glyphicon glyphicon-trash"></span>
                                     </a>
                                 </td>
@@ -81,39 +81,5 @@
 {% endblock %}
 
 {% block js %}
-    <script>
-        function confirm_delete(id,username) {
-            $.confirm({
-                title: '⚠️ 警告',
-                content: '确认删除辅导员: '+username+' 吗？',
-                type: 'red',
-                typeAnimated: true,
-                buttons: {
-                    confirm: {
-                        text: '删除',
-                        btnClass: 'btn-danger',
-                        action: function () {
-                            $.ajax({
-                                url: '/_counselor/delete',
-                                type: 'POST',
-                                data: {'id': id},
-                                success: function (data) {
-                                    if(data.result == 'OK'){
-                                        window.location.href('{{ url_for('main.counselor_list') }}');
-                                    }
-
-                                }
-                            });
-                        }
-                    },
-                    cancel: {
-                        text: '取消',
-                        btnClass: 'btn-default',
-                        action: function () {
-                        }
-                    }
-                }
-            });
-        }
-    </script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 {% endblock %}

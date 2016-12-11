@@ -6,16 +6,16 @@
     <div class="col-md-offset-1 col-md-8">
         <table class="table table-bordered">
             <tr>
-                <td>修学处</td>
                 <td>修学点</td>
                 <td>描述</td>
+                <td>修学处</td>
                 <td>修改/删除</td>
             </tr>
             {% for dept in depts %}
             <tr>
-                <td>{{ dept.division.name }}</td>
                 <td>{{ dept.name }}</td>
                 <td>{{ dept.desc }}</td>
+                <td>{{ dept.division.name }}</td>
                 <td>
                     <a href="{{ url_for('admin.department_edit',id=dept.id) }}">编辑</a>|
                     <a href="{{ url_for('admin.department_delete',id=dept.id) }}">删除</a>

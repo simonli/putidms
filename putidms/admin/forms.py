@@ -33,7 +33,7 @@ class DepartmentForm(FlaskForm):
         self.division_id.choices = division_choices
         self.department = kwargs.get('obj')
         if self.department:
-            self.division_id.default = self.department.division.id
+            self.division_id.default = self.department.division_id
 
     def validate_division_id(self, field):
         if field.data <= 0:

@@ -61,7 +61,7 @@ class User(UserMixin, db.Model):
     create_time = db.Column(db.DateTime)
     update_user = db.Column(db.Integer)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
-    is_delete = db.Column(db.Integer,default=0)
+    is_delete = db.Column(db.Integer, default=0)
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)
@@ -98,8 +98,8 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         db.session.commit()
 
-    # callback function for  flask-login extension
-    @staticmethod
-    @login_manager.user_loader
-    def load_user(user_id):
-        return User.query.get(int(user_id))
+
+# callback function for flask-login extentsion
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))

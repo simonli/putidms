@@ -6,6 +6,7 @@ from putidms.models.counselor import Counselor, LeadClassRecord, TrainingRecord,
 from putidms.models.org import Class, Duty
 from flask_login import current_user
 from putidms import db
+from flask_login import login_required
 
 mod = Blueprint('main', __name__)
 
@@ -29,12 +30,14 @@ def _add_numbers():
 
 
 @mod.route('/counselor/list')
+@login_required
 def counselor_list():
     counselors = Counselor.query.filter_by(is_delete=0).order_by(Counselor.update_time.desc()).all()
     return render_template('main/counselor_list.html', counselors=counselors)
 
 
 @mod.route('/counselor/add', methods=['GET', 'POST'])
+@login_required
 def counselor_add():
     form = CounselorForm()
     if form.validate_on_submit():
@@ -56,6 +59,7 @@ def counselor_add():
 
 
 @mod.route('/counselor/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
 def counselor_edit(id):
     c = Counselor.query.get(id)
     form = CounselorForm(obj=c)

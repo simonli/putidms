@@ -2,8 +2,9 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SelectField, DateField, IntegerField, SubmitField
 from wtforms import ValidationError
+from wtforms.validators import Regexp
 from wtforms.validators import input_required as ir, email
-
+from putidms import db
 from putidms.models.counselor import Counselor
 from putidms.models.org import Division, Department, Class, Duty
 
@@ -13,7 +14,7 @@ class CounselorForm(FlaskForm):
     religiousname = StringField(u'法名')
     gender = SelectField(u'性别', coerce=str, choices=[('M', u'男'), ('F', u'女')], validators=[])
     birthday = DateField(u'生日', format='%Y-%m-%d', validators=[ir(u'生日不能为空。')])
-    mobile = StringField(u'手机', validators=[ir(u'手机号码不能为空。')])
+    mobile = StringField(u'手机', validators=[ir(u'手机号码不能为空。'), Regexp('^1[34578]\d{9}$', message=u'手机号码格式不正确。')])
     email = StringField(u'Email', validators=[email(u'Email格式不正确')])
     division_id = SelectField(u'修学处', coerce=int)
     department_id = SelectField(u'修学点', coerce=int)
@@ -29,7 +30,8 @@ class CounselorForm(FlaskForm):
         self.division_id.choices = division_choices
 
         department_choices = [(r.id, r.name) for r in
-                              Department.query.filter_by(division_id=self.division_id.data).order_by(Department.name).all()]
+                              Department.query.filter_by(division_id=self.division_id.data).order_by(
+                                  Department.name).all()]
         department_choices.insert(0, (0, u'请选择所属修学点'))
         self.department_id.choices = department_choices
 
@@ -64,14 +66,23 @@ class CounselorForm(FlaskForm):
         if field.data <= 0:
             raise ValidationError(u'请选择岗位')
 
-    def validate_username(self,field):
+    def validate_username(self, field):
         if self.counselor:
             pass
         else:
-            cs = Counselor.query.filter_by(username=self.username).filter_by(religiousname=self.religiousname).count()
-            if cs>0:
+            cs = db.session.query(db.func.count(Counselor.username)).filter_by(username=self.username.data).filter_by(
+                religiousname=self.religiousname.data).scalar()
+            if cs > 0:
                 raise ValidationError(u'用用户+法名 重复，请改变后重新提交')
 
+    def validate_email(self, field):
+        if self.counselor:
+            if self.counselor.email != field.data and \
+                    Counselor.query.filter_by(email=field.data).first():
+                raise ValidationError(u'Email地址已存在。')
+        else:
+            if Counselor.query.filter_by(email=field.data).first():
+                raise ValidationError(u'Email地址已存在。')
 
 
 class LeadClassRecordForm(FlaskForm):

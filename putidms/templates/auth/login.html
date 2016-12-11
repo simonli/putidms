@@ -23,6 +23,7 @@
                 <div class="panel-body">
                     <form action="{{ url_for('auth.login') }}" method="post" class="form-horizontal" role="form">
                         {{ form.csrf_token }}
+                        <input type="hidden" name="next" value="{{ next }}">
                         {% set field=form.username %}
                         <div class="form-group {% if field.errors %} has-error{% endif %} ">
                             {{ field.label(class="col-md-3 control-label") }}

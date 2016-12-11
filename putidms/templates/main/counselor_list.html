@@ -1,3 +1,48 @@
 {% extends 'base.html' %}
 {% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            {% if counselors %}
+                <table class="table table-bordered">
+                    <tr>
+                        <td>姓名</td>
+                        <td>法名</td>
+                        <td>性别</td>
+                        <td>生日</td>
+                        <td>手机</td>
+                        <td>Email</td>
+                        <td>修学处</td>
+                        <td>修学点</td>
+                        <td>班级</td>
+                        <td>岗位</td>
+                        <td>带班</td>
+                        <td>培训</td>
+                        <td>考核</td>
+                        <td>修改/删除</td>
+                    </tr>
+                    {% for c in counselors %}
+                        <tr>
+                            <td>{{ c.username }}</td>
+                            <td>{{ c.religiousname }}</td>
+                            <td>{{ c.gender }}</td>
+                            <td>{{ c.birthday }}</td>
+                            <td>{{ c.mobile }}</td>
+                            <td>{{ c.email }}</td>
+                            <td>{{ c.cls.department.division.name }}</td>
+                            <td>{{ c.cls.department.name }}</td>
+                            <td>{{ c.cls.name }}</td>
+                            <td>{{ c.duty.name }}</td>
+                            <td>带班</td>
+                            <td>培训</td>
+                            <td>考核</td>
+                            <td>
+                                <a href="{{ url_for('main.counselor_edit',id=c.id) }}">编辑</a>|
+                                <a href="{{ url_for('main.counselor_delete',id=c.id) }}">删除</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

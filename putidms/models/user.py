@@ -58,7 +58,7 @@ class User(UserMixin, db.Model):
     is_active = db.Column(db.Boolean, nullable=False, default=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     create_user = db.Column(db.Integer)
-    create_time = db.Column(db.DateTime)
+    create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_user = db.Column(db.Integer)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
     is_delete = db.Column(db.Integer, default=0)
@@ -93,7 +93,6 @@ class User(UserMixin, db.Model):
 
     def update_login_info(self, last_login_ip):
         self.last_login_ip = last_login_ip
-        self.last_login_time = datetime.now()
         self.login_count += 1
         db.session.add(self)
         db.session.commit()

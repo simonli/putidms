@@ -36,8 +36,8 @@ class LeadClassRecord(db.Model):
     from_date = db.Column(db.Date)
     to_date = db.Column(db.Date)
     counselor_id = db.Column(db.Integer, db.ForeignKey('counselors.id'))
-    lead_class_id = db.Column(db.Integer, db.ForeignKey('classes.id'))
-    lead_class_duty_id = db.Column(db.Integer, db.ForeignKey('duties.id'))
+    class_id = db.Column(db.Integer, db.ForeignKey('classes.id'))
+    duty_id = db.Column(db.Integer, db.ForeignKey('duties.id'))
     update_user = db.Column(db.Integer)
     create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
@@ -49,7 +49,7 @@ class LeadClassRecord(db.Model):
 class TrainingRecord(db.Model):
     __tablename__ = 'training_records'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    training_name = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.String(255), nullable=False)
     location = db.Column(db.String(255), nullable=False)
     content = db.Column(db.Text)
     remark = db.Column(db.Text)
@@ -67,8 +67,8 @@ class TrainingRecord(db.Model):
 class EvaluationRecord(db.Model):
     __tablename__ = 'evaluation_records'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    evaluation_item = db.Column(db.String(255), nullable=False, index=True)
-    evaluation_date = db.Column(db.Date, nullable=False)
+    item = db.Column(db.String(255), nullable=False, index=True)
+    shiftdate = db.Column(db.Date, nullable=False)
     score = db.Column(db.Integer)
     counselor_id = db.Column(db.Integer, db.ForeignKey('counselors.id'))
     update_user = db.Column(db.Integer)

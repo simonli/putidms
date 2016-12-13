@@ -2,7 +2,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SelectField, DateField, IntegerField, SubmitField
 from wtforms import ValidationError
-from wtforms.validators import input_required as ir, email,regexp
+from wtforms.validators import input_required as ir, email, regexp
 from putidms import db
 from putidms.extensions import MySelectField
 from putidms.models.counselor import Counselor
@@ -44,7 +44,8 @@ class CounselorForm(FlaskForm):
         self.department_id.choices = department_choices
 
         if self.department_id.default:
-            class_choices = [(r.id, r.name) for r in Class.query.filter_by(department_id=self.department_id.default).all()]
+            class_choices = [(r.id, r.name) for r in
+                             Class.query.filter_by(department_id=self.department_id.default).all()]
         else:
             class_choices = [(r.id, r.name) for r in Class.query.all()]
         class_choices.insert(0, (0, u'请选择所属班级'))
@@ -90,15 +91,37 @@ class CounselorForm(FlaskForm):
 
 
 class LeadClassRecordForm(FlaskForm):
-    lead_class_id = SelectField(u'所带班级', coerce=int)
-    lead_class_duty_id = SelectField(u'带班岗位', coerce=int)
+    class_id = MySelectField(u'所带班级', coerce=int)
+    duty_id = MySelectField(u'带班岗位', coerce=int)
     from_date = DateField(u'开始时间', format='%Y-%m-%d', validators=[ir(u'开始时间不能为空。')])
     to_date = DateField(u'结束时间', format='%Y-%m-%d', validators=[ir(u'结束时间不能为空。')])
     submit = SubmitField(u'提交')
 
+    def __init__(self, *args, **kwargs):
+        super(LeadClassRecordForm, self).__init__(*args, **kwargs)
+
+        self.obj = kwargs.get('obj')
+        if self.obj:
+            self.class_id.default = self.obj.lead_class_id
+            self.duty_id.default = self.obj.ead_class_duty_id
+
+        if self.class_id.default:
+            class_choices = [(r.id, r.name) for r in Class.query.all()]
+        else:
+            class_choices = [(r.id, r.name) for r in Class.query.all()]
+        class_choices.insert(0,(0,u'请选择所带班级'))
+        self.class_id.choices = class_choices
+
+        if self.duty_id.default:
+            duty_choices = [(r.id, r.name) for r in Duty.query.all()]
+        else:
+            duty_choices = [(r.id, r.name) for r in Duty.query.all()]
+        duty_choices.insert(0,(0,u'请选择带班岗位'))
+        self.duty_id.choices = duty_choices
+
 
 class TrainingRecordForm(FlaskForm):
-    training_name = StringField(u'培训名称', validators=[ir(u'姓名不能为空。')])
+    name = StringField(u'培训名称', validators=[ir(u'姓名不能为空。')])
     location = StringField(u'培训地点', validators=[ir(u'姓名不能为空。')])
     content = TextAreaField(u'培训内容')
     remark = TextAreaField(u'备注')
@@ -108,7 +131,7 @@ class TrainingRecordForm(FlaskForm):
 
 
 class EvaluationRecordForm(FlaskForm):
-    evaluation_item = StringField(u'考核项目', validators=[ir(u'姓名不能为空。')])
-    evaluation_date = DateField(u'考核日期', format='%Y-%m-%d', validators=[ir(u'开始时间不能为空。')])
+    item = StringField(u'考核项目', validators=[ir(u'姓名不能为空。')])
+    shiftdate = DateField(u'考核日期', format='%Y-%m-%d', validators=[ir(u'开始时间不能为空。')])
     score = IntegerField(u'考核得分', validators=[ir(u'姓名不能为空。')])
     submit = SubmitField(u'提交')

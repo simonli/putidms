@@ -88,7 +88,7 @@ def leadclass_list():
     return render_template('main/leadclass_list.html', records=lcrs)
 
 
-@mod.route('/leadclass_add/<int:cid>', methods=['GET', 'POST'])
+@mod.route('/leadclass/add/<int:cid>', methods=['GET', 'POST'])
 @login_required
 def leadclass_add(cid):
     form = LeadClassRecordForm()
@@ -104,10 +104,10 @@ def leadclass_add(cid):
         db.session.commit()
         flash(u'带班记录添加成功。')
         return redirect(url_for('.leadclass_list', cid=cid))
-    return render_template('main/leadclass_add.html', form=form)
+    return render_template('main/leadclass_add.html', form=form, cid=cid)
 
 
-@mod.route('/leadclass_edit/<int:id>', methods=['GET', 'POST'])
+@mod.route('/leadclass/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def leadclass_edit(id):
     r = LeadClassRecord.query.get_or_404(id)
@@ -121,7 +121,7 @@ def leadclass_edit(id):
     return render_template('main/leadclass_edit.html', form=form, record=r)
 
 
-@mod.route('/leadclass_delete/<int:id>', methods=['GET', 'POST'])
+@mod.route('/leadclass/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 def leadclass_delete():
     r = LeadClassRecord.query.get_or_404(id)
@@ -138,7 +138,7 @@ def training_list():
     return render_template('main/training_list.html', record=r)
 
 
-@mod.route('/training/add/<int:cid', methods=['GET', 'POST'])
+@mod.route('/training/add/<int:cid>', methods=['GET', 'POST'])
 @login_required
 def training_add(cid):
     form = TrainingRecordForm()
@@ -217,6 +217,7 @@ def evaluation_edit(id):
         flash(u'编辑成功。')
         return redirect(url_for('.evaluation_list', cid=r.counselor_id))
     return render_template('main/evaluation_edit.html', form=form, record=r)
+
 
 @mod.route('/evaluation/delete/<int:id>', methods=['GET', 'POST'])
 @login_required

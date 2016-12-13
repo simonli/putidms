@@ -8,9 +8,10 @@ class Division(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), index=True, unique=True, nullable=False)
     desc = db.Column(db.Text)
-    create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_user = db.Column(db.Integer)
+    create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
+
     departments = db.relationship('Department', backref='division', lazy='dynamic')
 
     def __init__(self, *args, **kwargs):
@@ -23,12 +24,13 @@ class Division(db.Model):
 class Department(db.Model):
     __tablename__ = 'departments'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    division_id = db.Column(db.Integer, db.ForeignKey('divisions.id'))
     name = db.Column(db.String(255), index=True, unique=True, nullable=False)
     desc = db.Column(db.Text)
-    create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_user = db.Column(db.Integer)
+    create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
+
+    division_id = db.Column(db.Integer, db.ForeignKey('divisions.id'))
     classes = db.relationship('Class', backref='department', lazy='dynamic')
 
     def __init__(self, *args, **kwargs):
@@ -44,14 +46,14 @@ class Department(db.Model):
 class Class(db.Model):
     __tablename__ = 'classes'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
     name = db.Column(db.String(255), index=True, unique=True, nullable=False)
     number = db.Column(db.String(255), unique=True, nullable=False, index=True)  # 班级编号
     desc = db.Column(db.Text)
-    create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_user = db.Column(db.Integer)
+    create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
-    counselors = db.relationship('Counselor', backref='cls', lazy='dynamic')
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
+    counselors = db.relationship('Counselor', backref='class_', lazy='dynamic')
 
     def __init__(self, *args, **kwargs):
         super(Class, self).__init__(*args, **kwargs)
@@ -66,10 +68,10 @@ class Class(db.Model):
 class Duty(db.Model):
     __tablename__ = 'duties'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(200), nullable=False, index=True, unique=True)
-    desc = db.Column(db.String(255))
-    create_time = db.Column(db.DateTime,default=datetime.utcnow)
+    name = db.Column(db.String(255), index=True, unique=True, nullable=False)
+    desc = db.Column(db.Text)
     update_user = db.Column(db.Integer)
+    create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
     counselors = db.relationship('Counselor', backref='duty', lazy='dynamic')
 

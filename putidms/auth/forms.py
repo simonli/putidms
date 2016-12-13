@@ -4,6 +4,7 @@ from wtforms.validators import input_required as ir
 from wtforms.widgets import PasswordInput
 from flask_wtf import FlaskForm
 from putidms.models.user import User, Role
+from putidms.extensions import MySelectField
 
 
 class LoginForm(FlaskForm):
@@ -17,7 +18,7 @@ class UserForm(FlaskForm):
     password = PasswordField(u'密码', validators=[ir(u'密码不能为空。')])
     realname = StringField(u'真实姓名', validators=[ir(u'真实名或法名不能为空。')])
     email = StringField(u'邮件', validators=[ir(u'邮件地址不能为空。')])
-    role_id = SelectField(u'权限', coerce=int)
+    role_id = MySelectField(u'权限', coerce=int)
     submit = SubmitField(u'提交')
 
     def __init__(self, *args, **kwargs):

@@ -16,7 +16,7 @@ class Counselor(db.Model):
     duty_id = db.Column(db.Integer, db.ForeignKey('duties.id'))  # 岗位
     is_delete = db.Column(db.Integer, default=0)
     create_user = db.Column(db.Integer)
-    create_time = db.Column(db.DateTime,default=datetime.utcnow)
+    create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_user = db.Column(db.Integer)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
     lead_class_records = db.relationship('LeadClassRecord', backref='counselor', lazy='dynamic')
@@ -38,8 +38,8 @@ class LeadClassRecord(db.Model):
     counselor_id = db.Column(db.Integer, db.ForeignKey('counselors.id'))
     lead_class_id = db.Column(db.Integer, db.ForeignKey('classes.id'))
     lead_class_duty_id = db.Column(db.Integer, db.ForeignKey('duties.id'))
-    create_time = db.Column(db.DateTime,default=datetime.utcnow)
     update_user = db.Column(db.Integer)
+    create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __init__(self, *args, **kwargs):
@@ -56,8 +56,8 @@ class TrainingRecord(db.Model):
     from_date = db.Column(db.Date)
     to_date = db.Column(db.Date)
     counselor_id = db.Column(db.Integer, db.ForeignKey('counselors.id'))
-    create_time = db.Column(db.DateTime,default=datetime.utcnow)
     update_user = db.Column(db.Integer)
+    create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __init__(self, *args, **kwargs):
@@ -71,8 +71,8 @@ class EvaluationRecord(db.Model):
     evaluation_date = db.Column(db.Date, nullable=False)
     score = db.Column(db.Integer)
     counselor_id = db.Column(db.Integer, db.ForeignKey('counselors.id'))
-    create_time = db.Column(db.DateTime,default=datetime.utcnow)
     update_user = db.Column(db.Integer)
+    create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __init__(self, *args, **kwargs):

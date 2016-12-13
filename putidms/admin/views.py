@@ -133,7 +133,7 @@ def class_add():
 @admin_required
 def class_edit(id):
     c = Class.query.get(id)
-    form = DivisionForm(obj=c)
+    form = ClassForm(obj=c)
     if form.validate_on_submit():
         form.populate_obj(c)
         db.session.add(c)

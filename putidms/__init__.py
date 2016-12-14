@@ -22,7 +22,7 @@ def create_app(config_name=None, blueprints=None):
     app.config.from_object(configs[config_name])
 
     configure_extensions(app)
-    # configure_errorhandlers(app)
+    configure_errorhandlers(app)
     # configure_before_handlers(app)
     configure_blueprints(app, blueprints)
 

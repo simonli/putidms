@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% from "_macros.html" import render_field, render_errors, render_submit_field %}
+{% from "_macros.html" import render_field, render_submit_field %}
 {% block content %}
     <form action="{{ url_for('main.counselor_add') }}" class="form-horizontal" role="form" method="POST">
         {{ form.csrf_token }}

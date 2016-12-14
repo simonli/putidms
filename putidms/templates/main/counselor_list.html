@@ -6,8 +6,8 @@
                 <form action="{{ url_for('main.counselor_search') }}" method="post" role="form" class="form-horizontal">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <input class="form-control" type="text" id="query_str" name="query_str"
-                                   value="{{ query_str }}"
+                            <input class="form-control" type="text" id="keyword" name="keyword"
+                                   value="{{ keyword }}"
                                    placeholder="姓名,法名,Email,手机">
                         </div>
                     </div>
@@ -27,6 +27,7 @@
                 <div class="row">
                     <table class="table table-bordered">
                         <tr class="active">
+                            <td>序号</td>
                             <td>姓名</td>
                             <td>法名</td>
                             <td>性别</td>
@@ -44,6 +45,7 @@
                         </tr>
                         {% for c in counselors %}
                             <tr>
+                                <td>{{ loop.index }}</td>
                                 <td>{{ c.username }}</td>
                                 <td>{{ c.religiousname }}</td>
                                 <td>{{ c.gender }}</td>
@@ -54,14 +56,15 @@
                                 <td>{{ c.class_.department.name }}</td>
                                 <td>{{ c.class_.name }}</td>
                                 <td>{{ c.duty.name }}</td>
-                                <td><a href="{{ url_for('main.leadclass_list',cid=c.id) }}" target="_blank" >带班</a></td>
+                                <td><a href="{{ url_for('main.leadclass_list',cid=c.id) }}">带班</a></td>
                                 <td>培训</td>
                                 <td>考核</td>
                                 <td>
                                     <a href="{{ url_for('main.counselor_edit',id=c.id) }}" title="编辑">
                                         <span class="glyphicon glyphicon-pencil"></span>
                                     </a>
-                                    <a href="javascript:void(0);" title="删除辅导员" onclick="confirm_delete('{{ url_for("main.counselor_delete",id=c.id) }}');">
+                                    <a href="javascript:void(0);" title="删除辅导员"
+                                       onclick="confirm_delete('{{ url_for("main.counselor_delete",id=c.id) }}');">
                                         <span class="glyphicon glyphicon-trash"></span>
                                     </a>
                                 </td>

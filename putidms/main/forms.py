@@ -27,8 +27,8 @@ class CounselorForm(FlaskForm):
         self.counselor = kwargs.get('obj')
         if self.counselor:
             self.class_id.default = self.counselor.class_id
-            self.department_id.default = self.counselor.cls.department_id
-            self.division_id.default = self.counselor.cls.department.division_id
+            self.department_id.default = self.counselor.class_.department_id
+            self.division_id.default = self.counselor.class_.department.division_id
             self.duty_id.default = self.counselor.duty_id
 
         division_choices = [(r.id, r.name) for r in Division.query.all()]
@@ -133,13 +133,21 @@ class LeadClassRecordForm(FlaskForm):
         duty_choices.insert(0, (0, u'请选择带班岗位'))
         self.duty_id.choices = duty_choices
 
+    def validate_division_id(self, field):
+        if field.data <= 0:
+            raise ValidationError(u'请选择班级所在修学处。')
+
+    def validate_department_id(self, field):
+        if field.data <= 0:
+            raise ValidationError(u'请选择班级所在修学点。')
+
     def validate_class_id(self, field):
         if field.data <= 0:
-            raise ValidationError(u'请选择所带班级')
+            raise ValidationError(u'请选择所带班级。')
 
     def validate_duty_id(self, field):
         if field.data <= 0:
-            raise ValidationError(u'请选择岗位')
+            raise ValidationError(u'请选择岗位。')
 
 
 class TrainingRecordForm(FlaskForm):

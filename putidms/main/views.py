@@ -71,38 +71,43 @@ def counselor_delete(id):
     return redirect(url_for('.counselor_list'))
 
 
-@mod.route('/counselor/search', methods=['POST'])
+@mod.route('/counselor/search', methods=['GET', 'POST'])
 @login_required
 def counselor_search():
-    query_str = '%' + request.form.get('query_str') + '%'
-    rule = db.or_(Counselor.username.like(query_str), Counselor.religiousname.like(query_str), \
-                  Counselor.email.like(query_str), Counselor.mobile.like(query_str))
-    counselors = Counselor.query.filter(rule).filter_by(is_delete=0).order_by(Counselor.update_time.desc()).all()
-    return render_template('main/counselor_list.html', counselors=counselors, query_str=request.form.get('query_str'))
+    cid = request.args.get('cid')
+    if cid:
+        keyword = int(cid)
+        counselors = Counselor.query.filter_by(id=keyword).filter_by(is_delete=0).order_by(
+            Counselor.update_time.desc()).all()
+    else:
+        keyword = request.form.get('keyword')
+        query_str = '%' + keyword + '%'
+        rule = db.or_(Counselor.id == query_str, Counselor.username.like(query_str),
+                      Counselor.religiousname.like(query_str), \
+                      Counselor.email.like(query_str), Counselor.mobile.like(query_str))
+        counselors = Counselor.query.filter(rule).filter_by(is_delete=0).order_by(Counselor.update_time.desc()).all()
+    return render_template('main/counselor_list.html', counselors=counselors, keyword=keyword)
 
 
 @mod.route('/leadclass/search', methods=['POST'])
 @login_required
 def leadclass_search():
     query_str = '%' + request.form.get('query_str') + '%'
-    rule = db.or_(Counselor.username.like(query_str), Counselor.religiousname.like(query_str), \
+    rule = db.or_(Counselor.id == query_str, Counselor.username.like(query_str),
+                  Counselor.religiousname.like(query_str), \
                   Counselor.email.like(query_str), Counselor.mobile.like(query_str))
     counselors = Counselor.query.filter(rule).filter_by(is_delete=0).order_by(Counselor.update_time.desc()).all()
-    records=[]
+    records = []
     for c in counselors:
         for r in c.lead_class_records:
             records.append(r)
     return render_template('main/leadclass_list.html', records=records)
 
 
-@mod.route('/leadclass/list')
+@mod.route('/leadclass/list/<int:cid>')
 @login_required
-def leadclass_list():
-    cid = request.args.get('cid') or request.form.get('cid')
-    if cid:
-        records = LeadClassRecord.query.filter_by(counselor_id=cid).order_by(LeadClassRecord.update_time.desc()).all()
-    else:
-        records = LeadClassRecord.query.order_by(LeadClassRecord.update_time.desc()).all()
+def leadclass_list(cid):
+    records = LeadClassRecord.query.filter_by(counselor_id=cid).order_by(LeadClassRecord.update_time.desc()).all()
     return render_template('main/leadclass_list.html', records=records)
 
 

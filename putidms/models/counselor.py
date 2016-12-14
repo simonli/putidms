@@ -39,7 +39,7 @@ class LeadClassRecord(db.Model):
     class_id = db.Column(db.Integer, db.ForeignKey('classes.id'))
     duty_id = db.Column(db.Integer, db.ForeignKey('duties.id'))
     update_user = db.Column(db.Integer)
-    create_time = db.Column(db.DateTime, default=datetime.utcnow)
+    create_time = db.Column(db.DateTime, default=datetime.utcnow())
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __init__(self, *args, **kwargs):

@@ -54,6 +54,7 @@ class Class(db.Model):
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
     counselors = db.relationship('Counselor', backref='class_', lazy='dynamic')
+    lead_class_records = db.relationship('LeadClassRecord', backref='class_', lazy='dynamic')
 
     def __init__(self, *args, **kwargs):
         super(Class, self).__init__(*args, **kwargs)
@@ -74,6 +75,7 @@ class Duty(db.Model):
     create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
     counselors = db.relationship('Counselor', backref='duty', lazy='dynamic')
+    lead_class_records = db.relationship('LeadClassRecord', backref='duty', lazy='dynamic')
 
     def __init__(self, *args, **kwargs):
         super(Duty, self).__init__(*args, **kwargs)

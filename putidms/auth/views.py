@@ -11,6 +11,7 @@ mod = Blueprint('auth', __name__)
 
 @mod.route('/login', methods=['GET', 'POST'])
 def login():
+    return_url = request.args.get("next") or request.form.get("next")
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -19,14 +20,14 @@ def login():
                 login_user(user)
                 user.update_login_info(request.remote_addr)
                 flash(u'登陆成功！欢迎回来，%s!' % user.realname, 'success')
-                return redirect(request.form.get("next") or url_for('main.index'))
+                return redirect(return_url or url_for('main.index'))
             else:
                 flash(u'密码不正确。', 'danger')
         else:
             flash(u'用户不存在。', 'danger')
     if form.errors:
         flash(u'登陆失败，请尝试重新登陆.', 'danger')
-    return render_template('auth/login.html', form=form, next=request.args.get('next'))
+    return render_template('auth/login.html', form=form, next=return_url)
 
 
 @mod.route('/logout')

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% from "_macros.html" import render_field, render_errors, render_submit_field %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-offset-1 col-md-6">
+            <form action="{{ url_for('main.leadclass_edit',id=record.id) }}" class="form-horizontal" role="form"
+                  method="POST">
+                {{ form.csrf_token }}
+                {{ render_field(form.division_id,"col-md-4","col-md-7",onChange="get_dept_list()") }}
+                {{ render_field(form.department_id,"col-md-4","col-md-7",onChange="get_class_list()") }}
+                {{ render_field(form.class_id,"col-md-4","col-md-7") }}
+                {{ render_field(form.duty_id,"col-md-4","col-md-7") }}
+                {{ render_field(form.from_date,"col-md-4","col-md-7",onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd'})",placeholder="格式：2015-03-29") }}
+                {{ render_field(form.to_date,"col-md-4","col-md-7",onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd'})",placeholder="格式：2016-10-31") }}
+                {{ render_submit_field(form.submit,"col-md-offset-4 col-md-3") }}
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='My97DatePicker/WdatePicker.js') }}"></script>
+{% endblock %}

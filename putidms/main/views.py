@@ -36,7 +36,7 @@ def counselor_add():
         c.birthday = form.birthday.data
         c.mobile = form.mobile.data
         c.email = form.email.data
-        c.cls = Class.query.get(form.class_id.data)  # 班级
+        c.class_ = Class.query.get(form.class_id.data)  # 班级
         c.duty = Duty.query.get(form.duty_id.data)
         c.create_user = current_user.id
         db.session.add(c)
@@ -81,28 +81,49 @@ def counselor_search():
     return render_template('main/counselor_list.html', counselors=counselors, query_str=request.form.get('query_str'))
 
 
-@mod.route('/leadclass_list')
+@mod.route('/leadclass/search', methods=['POST'])
+@login_required
+def leadclass_search():
+    query_str = '%' + request.form.get('query_str') + '%'
+    rule = db.or_(Counselor.username.like(query_str), Counselor.religiousname.like(query_str), \
+                  Counselor.email.like(query_str), Counselor.mobile.like(query_str))
+    counselors = Counselor.query.filter(rule).filter_by(is_delete=0).order_by(Counselor.update_time.desc()).all()
+    records=[]
+    for c in counselors:
+        for r in c.lead_class_records:
+            records.append(r)
+    return render_template('main/leadclass_list.html', records=records)
+
+
+@mod.route('/leadclass/list')
 @login_required
 def leadclass_list():
-    lcrs = LeadClassRecord.query.order_by(LeadClassRecord.update_time.desc()).all()
-    return render_template('main/leadclass_list.html', records=lcrs)
+    cid = request.args.get('cid') or request.form.get('cid')
+    if cid:
+        records = LeadClassRecord.query.filter_by(counselor_id=cid).order_by(LeadClassRecord.update_time.desc()).all()
+    else:
+        records = LeadClassRecord.query.order_by(LeadClassRecord.update_time.desc()).all()
+    return render_template('main/leadclass_list.html', records=records)
 
 
 @mod.route('/leadclass/add/<int:cid>', methods=['GET', 'POST'])
 @login_required
 def leadclass_add(cid):
+    c = Counselor.query.get(cid)
+    if c is None:
+        flash(u'该位辅导员/辅助员不存在。', 'danger')
+        return redirect(url_for('.index'))
     form = LeadClassRecordForm()
     if form.validate_on_submit():
-        c = Counselor.query.get_or_404(cid)
         r = LeadClassRecord()
         r.counselor_id = c.id
-        r.lead_class_duty_id = form.lead_class_duty_id.data
-        r.lead_class_id = form.lead_class_id.data
+        r.duty_id = form.duty_id.data
+        r.class_id = form.class_id.data
         r.from_date = form.from_date.data
         r.to_date = form.to_date.data
         db.session.add(r)
         db.session.commit()
-        flash(u'带班记录添加成功。')
+        flash(u'带班记录添加成功。', 'success')
         return redirect(url_for('.leadclass_list', cid=cid))
     return render_template('main/leadclass_add.html', form=form, cid=cid)
 
@@ -116,7 +137,7 @@ def leadclass_edit(id):
         form.populate_obj(r)
         db.session.add(r)
         db.session.commit()
-        flash(u'带班记录编辑成功。')
+        flash(u'带班记录编辑成功。', 'success')
         return redirect(url_for('.leadclass_list', cid=r.counselor_id))
     return render_template('main/leadclass_edit.html', form=form, record=r)
 
@@ -127,7 +148,7 @@ def leadclass_delete():
     r = LeadClassRecord.query.get_or_404(id)
     db.session.remove(r)
     db.session.commit()
-    flash(u'记录删除成功。')
+    flash(u'记录删除成功。', 'success')
     return redirect(url_for('.leadclass_list', cid=r.counselor_id))
 
 
@@ -154,7 +175,7 @@ def training_add(cid):
         r.counselor_id = c.id
         db.session.add(r)
         db.session.commit()
-        flash(u'成功添加培训记录。')
+        flash(u'成功添加培训记录。', 'success')
         return redirect(url_for('.training_list', cid=c.id))
     return render_template('main/training_add.html', form=form)
 
@@ -168,7 +189,7 @@ def training_edit(id):
         form.populate_obj(r)
         db.session.add(r)
         db.session.commit()
-        flash(u'编辑成功。')
+        flash(u'编辑成功。', 'success')
         return redirect(url_for('.training_list', cid=r.counselor_id))
     return render_template('main/training_edit.html', form=form, record=r)
 
@@ -179,7 +200,7 @@ def training_delete(id):
     r = TrainingRecord.query.get_or_404(id)
     db.session.remove(r)
     db.session.commit()
-    flash(u'删除成功。')
+    flash(u'删除成功。', 'success')
     return redirect(url_for('.training_list', cid=r.counselor_id))
 
 
@@ -201,7 +222,7 @@ def evaluation_add(cid):
         r.score = form.score.data
         db.session.add(r)
         db.session.commit()
-        flash(u'添加成功。')
+        flash(u'添加成功。', 'success')
     return render_template('main/evaluation_add.html', form=form)
 
 
@@ -214,7 +235,7 @@ def evaluation_edit(id):
         form.populate_obj(r)
         db.session.add(r)
         db.session.commit()
-        flash(u'编辑成功。')
+        flash(u'编辑成功。', 'success')
         return redirect(url_for('.evaluation_list', cid=r.counselor_id))
     return render_template('main/evaluation_edit.html', form=form, record=r)
 
@@ -225,5 +246,5 @@ def evaluation_delete(id):
     r = EvaluationRecord.query.get_or_404(id)
     db.session.remove(r)
     db.session.commit()
-    flash(u'删除成功。')
+    flash(u'删除成功。', 'success')
     return redirect(url_for('.evaluation_list', cid=r.counselor_id))

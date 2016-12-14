@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <form action="{{ url_for('main.leadclass_search') }}" method="post" role="form" class="form-horizontal">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <input class="form-control" type="text" id="query_str" name="query_str"
+                                   value="{{ query_str }}"
+                                   placeholder="姓名,法名,Email,手机">
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-default">
+                            <span class="glyphicon glyphicon-search"></span> 查找
+                        </button>
+                    </div>
+                </form>
+            </div>
+            {% if records %}
+                <div class="row">
+                    <table class="table table-bordered">
+                        <tr class="active">
+                            <td>序号</td>
+                            <td>姓名</td>
+                            <td>法名</td>
+                            <td>所带班级</td>
+                            <td>从事岗位</td>
+                            <td>开始时间</td>
+                            <td>结束时间</td>
+                            <td>操作</td>
+                        </tr>
+                        {% for r in records %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ r.counselor.username }}</td>
+                                <td>{{ r.counselor.religiousname }}</td>
+                                <td>{{ r.class_.name }}（{{ r.class_.department.division.name }}-{{ r.class_.department.name }}）</td>
+{#                                #}
+                                <td>{{ r.duty.name }}</td>
+                                <td>{{ r.from_date }}</td>
+                                <td>{{ r.to_date }}</td>
+                                <td>
+                                    <a href="{{ url_for('main.leadclass_edit',id=r.id) }}" title="编辑">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </a>
+                                    <a href="javascript:void(0);" title="删除" onclick="confirm_delete('{{ url_for("main.leadclass_delete",id=r.id) }}');">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% else %}
+                <div class="row">
+                    <div class="col-md-12">
+                        没有找到相关资料！
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}

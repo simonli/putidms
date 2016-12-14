@@ -91,8 +91,10 @@ class CounselorForm(FlaskForm):
 
 
 class LeadClassRecordForm(FlaskForm):
+    division_id = MySelectField(u'班级所在修学处', coerce=int)
+    department_id = MySelectField(u'班级所在修学点', coerce=int)
     class_id = MySelectField(u'所带班级', coerce=int)
-    duty_id = MySelectField(u'带班岗位', coerce=int)
+    duty_id = MySelectField(u'从事岗位', coerce=int)
     from_date = DateField(u'开始时间', format='%Y-%m-%d', validators=[ir(u'开始时间不能为空。')])
     to_date = DateField(u'结束时间', format='%Y-%m-%d', validators=[ir(u'结束时间不能为空。')])
     submit = SubmitField(u'提交')
@@ -102,22 +104,42 @@ class LeadClassRecordForm(FlaskForm):
 
         self.obj = kwargs.get('obj')
         if self.obj:
-            self.class_id.default = self.obj.lead_class_id
-            self.duty_id.default = self.obj.ead_class_duty_id
+            self.class_id.default = self.obj.class_id
+            self.duty_id.default = self.obj.duty_id
+            self.department_id.default = self.obj.class_.department_id
+            self.division_id.default = self.obj.class_.department.division_id
 
-        if self.class_id.default:
-            class_choices = [(r.id, r.name) for r in Class.query.all()]
+        division_choices = [(r.id, r.name) for r in Division.query.all()]
+        division_choices.insert(0, (0, u'请选择所属修学处'))
+        self.division_id.choices = division_choices
+
+        if self.division_id.default:
+            department_choices = [(r.id, r.name) for r in
+                                  Department.query.filter_by(division_id=self.division_id.default).all()]
+        else:
+            department_choices = [(r.id, r.name) for r in Department.query.all()]
+        department_choices.insert(0, (0, u'请选择所属修学点'))
+        self.department_id.choices = department_choices
+
+        if self.department_id.default:
+            class_choices = [(r.id, r.name) for r in
+                             Class.query.filter_by(department_id=self.department_id.default).all()]
         else:
             class_choices = [(r.id, r.name) for r in Class.query.all()]
-        class_choices.insert(0,(0,u'请选择所带班级'))
+        class_choices.insert(0, (0, u'请选择所属班级'))
         self.class_id.choices = class_choices
 
-        if self.duty_id.default:
-            duty_choices = [(r.id, r.name) for r in Duty.query.all()]
-        else:
-            duty_choices = [(r.id, r.name) for r in Duty.query.all()]
-        duty_choices.insert(0,(0,u'请选择带班岗位'))
+        duty_choices = [(r.id, r.name) for r in Duty.query.all()]
+        duty_choices.insert(0, (0, u'请选择带班岗位'))
         self.duty_id.choices = duty_choices
+
+    def validate_class_id(self, field):
+        if field.data <= 0:
+            raise ValidationError(u'请选择所带班级')
+
+    def validate_duty_id(self, field):
+        if field.data <= 0:
+            raise ValidationError(u'请选择岗位')
 
 
 class TrainingRecordForm(FlaskForm):

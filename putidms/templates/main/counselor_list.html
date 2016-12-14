@@ -50,11 +50,11 @@
                                 <td>{{ c.birthday }}</td>
                                 <td>{{ c.mobile }}</td>
                                 <td>{{ c.email }}</td>
-                                <td>{{ c.cls.department.division.name }}</td>
-                                <td>{{ c.cls.department.name }}</td>
-                                <td>{{ c.cls.name }}</td>
+                                <td>{{ c.class_.department.division.name }}</td>
+                                <td>{{ c.class_.department.name }}</td>
+                                <td>{{ c.class_.name }}</td>
                                 <td>{{ c.duty.name }}</td>
-                                <td>带班</td>
+                                <td><a href="{{ url_for('main.leadclass_list',cid=c.id) }}" target="_blank" >带班</a></td>
                                 <td>培训</td>
                                 <td>考核</td>
                                 <td>

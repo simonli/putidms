@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            {% if records %}
+                <div class="row">
+                    <table class="table table-bordered">
+                        <tr class="active">
+                            <td>序号</td>
+                            <td>姓名(法名)</td>
+                            <td>考核项目</td>
+                            <td>考核日期</td>
+                            <td>考核得分</td>
+                            <td>操作</td>
+                        </tr>
+                        {% for r in records %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>
+                                    <a href="{{ url_for('main.counselor_search',cid=r.counselor_id) }}">
+                                        {{ r.counselor.username }}{% if r.counselor.religiousname %}(
+                                            {{ r.counselor.religiousname }}){% endif %}
+
+                                    </a>
+                                </td>
+                                <td>{{ r.item }}</td>
+                                <td>{{ r.shiftdate }}</td>
+                                <td>{{ r.score }}</td>
+                                <td>
+                                    <a href="{{ url_for('main.evaluation_edit',id=r.id) }}" title="编辑">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </a>
+                                    <a href="javascript:void(0);" title="删除"
+                                       onclick="confirm_delete('{{ url_for("main.evaluation_delete",id=r.id) }}');">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% else %}
+                <div class="row">
+                    <div class="col-md-12">
+                        没有找到相关资料！
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}

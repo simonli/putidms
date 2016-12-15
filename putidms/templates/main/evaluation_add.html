@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% from "_macros.html" import render_field, render_submit_field %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-offset-1 col-md-6">
+            <form action="{{ url_for('main.evaluation_add',cid=cid) }}" class="form-horizontal" role="form"
+                  method="POST">
+                {{ form.csrf_token }}
+                {{ render_field(form.item,"col-md-3","col-md-9") }}
+                {{ render_field(form.shiftdate,"col-md-3","col-md-9") }}
+                {{ render_field(form.score,"col-md-3","col-md-9") }}
+                {{ render_submit_field(form.submit,"col-md-offset-3 col-md-3") }}
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='My97DatePicker/WdatePicker.js') }}"></script>
+{% endblock %}

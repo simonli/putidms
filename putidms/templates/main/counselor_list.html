@@ -56,12 +56,33 @@
                                 <td>{{ c.class_.department.name }}</td>
                                 <td>{{ c.class_.name }}</td>
                                 <td>{{ c.duty.name }}</td>
-                                <td><a href="{{ url_for('main.leadclass_list',cid=c.id) }}">带班</a></td>
-                                <td>培训</td>
-                                <td>考核</td>
+                                <td>
+                                    <a href="{{ url_for('main.leadclass_add',cid=c.id) }}" title="添加带班记录">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </a>
+                                    <a href="{{ url_for('main.leadclass_list',cid=c.id) }}" title="查看带班记录">
+                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('main.training_add',cid=c.id) }}" title="添加培训记录">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </a>
+                                    <a href="{{ url_for('main.training_list',cid=c.id) }}" title="查看培训记录">
+                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('main.evaluation_add',cid=c.id) }}" title="添加考核记录">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </a>
+                                    <a href="{{ url_for('main.evaluation_list',cid=c.id) }}" title="查看考核记录">
+                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                    </a>
+                                </td>
                                 <td>
                                     <a href="{{ url_for('main.counselor_edit',id=c.id) }}" title="编辑">
-                                        <span class="glyphicon glyphicon-pencil"></span>
+                                        <span class="glyphicon glyphicon-edit"></span>
                                     </a>
                                     <a href="javascript:void(0);" title="删除辅导员"
                                        onclick="confirm_delete('{{ url_for("main.counselor_delete",id=c.id) }}');">

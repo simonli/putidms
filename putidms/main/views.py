@@ -89,21 +89,6 @@ def counselor_search():
     return render_template('main/counselor_list.html', counselors=counselors, keyword=keyword)
 
 
-@mod.route('/leadclass/search', methods=['POST'])
-@login_required
-def leadclass_search():
-    query_str = '%' + request.form.get('query_str') + '%'
-    rule = db.or_(Counselor.id == query_str, Counselor.username.like(query_str),
-                  Counselor.religiousname.like(query_str), \
-                  Counselor.email.like(query_str), Counselor.mobile.like(query_str))
-    counselors = Counselor.query.filter(rule).filter_by(is_delete=0).order_by(Counselor.update_time.desc()).all()
-    records = []
-    for c in counselors:
-        for r in c.lead_class_records:
-            records.append(r)
-    return render_template('main/leadclass_list.html', records=records)
-
-
 @mod.route('/leadclass/list/<int:cid>')
 @login_required
 def leadclass_list(cid):
@@ -157,21 +142,24 @@ def leadclass_delete():
     return redirect(url_for('.leadclass_list', cid=r.counselor_id))
 
 
-@mod.route('/training/list')
+@mod.route('/training/list/<int:cid>')
 @login_required
-def training_list():
-    r = TrainingRecord.query.order_by(TrainingRecord.update_time.desc()).all()
-    return render_template('main/training_list.html', record=r)
+def training_list(cid):
+    records = TrainingRecord.query.filter_by(counselor_id=cid).order_by(TrainingRecord.update_time.desc()).all()
+    return render_template('main/training_list.html', records=records)
 
 
 @mod.route('/training/add/<int:cid>', methods=['GET', 'POST'])
 @login_required
 def training_add(cid):
+    c = Counselor.query.get(cid)
+    if c is None:
+        flash(u'该位辅导员/辅助员不存在。', 'danger')
+        return redirect(url_for('.index'))
     form = TrainingRecordForm()
     if form.validate_on_submit():
-        c = Counselor.query.get_or_404(cid)
         r = TrainingRecord()
-        r.training_name = form.training_name.data
+        r.name = form.name.data
         r.location = form.location.data
         r.content = form.content.data
         r.from_date = form.from_date.data
@@ -182,7 +170,7 @@ def training_add(cid):
         db.session.commit()
         flash(u'成功添加培训记录。', 'success')
         return redirect(url_for('.training_list', cid=c.id))
-    return render_template('main/training_add.html', form=form)
+    return render_template('main/training_add.html', form=form, cid=cid)
 
 
 @mod.route('/training/edit/<int:id>', methods=['GET', 'POST'])
@@ -209,16 +197,20 @@ def training_delete(id):
     return redirect(url_for('.training_list', cid=r.counselor_id))
 
 
-@mod.route('/evaluation/list')
+@mod.route('/evaluation/list/<int:cid>')
 @login_required
-def evaluation_list():
-    r = EvaluationRecord.query.order_by(EvaluationRecord.update_time.desc()).all()
-    return render_template('main/evaluation_list.html', record=r)
+def evaluation_list(cid):
+    records = EvaluationRecord.query.filter_by(counselor_id=cid).order_by(EvaluationRecord.update_time.desc()).all()
+    return render_template('main/evaluation_list.html', records=records)
 
 
 @mod.route('/evaluation/add/<int:cid>', methods=['GET', 'POST'])
 @login_required
 def evaluation_add(cid):
+    c = Counselor.query.get(cid)
+    if c is None:
+        flash(u'该位辅导员/辅助员不存在。', 'danger')
+        return redirect(url_for('.index'))
     form = EvaluationRecordForm()
     if form.validate_on_submit():
         r = EvaluationRecord()
@@ -228,7 +220,7 @@ def evaluation_add(cid):
         db.session.add(r)
         db.session.commit()
         flash(u'添加成功。', 'success')
-    return render_template('main/evaluation_add.html', form=form)
+    return render_template('main/evaluation_add.html', form=form, cid=cid)
 
 
 @mod.route('/evaluation/edit/<int:id>', methods=['GET', 'POST'])

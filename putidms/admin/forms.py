@@ -60,23 +60,23 @@ class ClassForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         super(ClassForm, self).__init__(*args, **kwargs)
-
         self.class_ = kwargs.get('obj')
-        if self.class_:
-            self.department_id.default = self.class_.department_id
-            self.division_id.default = self.class_.department.division_id
 
         division_choices = [(r.id, r.name) for r in Division.query.all()]
         division_choices.insert(0, (0, u'请选择所属修学处'))
         self.division_id.choices = division_choices
 
-        if self.division_id.default:
-            dept_choices = [(r.id, r.name) for r in
-                            Department.query.filter_by(division_id=self.division_id.default).all()]
+        if self.class_:
+            dept_choices = [(r.id, r.name) for r in Department.query\
+                                .filter_by(division_id=self.division_id.data).all()]
         else:
             dept_choices = [(r.id, r.name) for r in Department.query.all()]
         dept_choices.insert(0, (0, u'请选择所属修学点'))
         self.department_id.choices = dept_choices
+
+        if self.class_:
+            self.department_id.default = self.class_.department_id
+            self.division_id.default = self.class_.department.division_id
 
     def validate_division_id(self, field):
         if field.data <= 0:

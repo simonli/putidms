@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            {% if records %}
+                <div class="row">
+                    <table class="table table-bordered">
+                        <tr class="active">
+                            <td>序号</td>
+                            <td>姓名(法名)</td>
+                            <td>培训名称</td>
+                            <td>培训地点</td>
+                            <td>培训内容</td>
+                            <td>备注</td>
+                            <td>开始时间</td>
+                            <td>结束时间</td>
+                            <td>操作</td>
+                        </tr>
+                        {% for r in records %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>
+                                    <a href="{{ url_for('main.counselor_search',cid=r.counselor_id) }}">
+                                        {{ r.counselor.username }}{% if r.counselor.religiousname %}(
+                                            {{ r.counselor.religiousname }}){% endif %}
+
+                                    </a>
+                                </td>
+                                <td>{{ r.name }}</td>
+                                <td>{{ r.location }}</td>
+                                <td>{{ r.content }}</td>
+                                <td>{{ r.remark }}</td>
+                                <td>{{ r.from_date }}</td>
+                                <td>{{ r.to_date }}</td>
+                                <td>
+                                    <a href="{{ url_for('main.training_edit',id=r.id) }}" title="编辑">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </a>
+                                    <a href="javascript:void(0);" title="删除"
+                                       onclick="confirm_delete('{{ url_for("main.training_delete",id=r.id) }}');">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% else %}
+                <div class="row">
+                    <div class="col-md-12">
+                        没有找到相关资料！
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}

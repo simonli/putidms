@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, SelectField, DateField, IntegerField, SubmitField
+from wtforms import StringField, TextAreaField, SelectField, DateField, FloatField, SubmitField
 from wtforms import ValidationError
 from wtforms.validators import input_required as ir, email, regexp
 from putidms import db
@@ -153,8 +153,8 @@ class LeadClassRecordForm(FlaskForm):
 
 
 class TrainingRecordForm(FlaskForm):
-    name = StringField(u'培训名称', validators=[ir(u'姓名不能为空。')])
-    location = StringField(u'培训地点', validators=[ir(u'姓名不能为空。')])
+    name = StringField(u'培训名称', validators=[ir(u'培训名称不能为空。')])
+    location = StringField(u'培训地点', validators=[ir(u'培训地点不能为空。')])
     content = TextAreaField(u'培训内容')
     remark = TextAreaField(u'备注')
     from_date = DateField(u'开始时间', format='%Y-%m-%d', validators=[ir(u'开始时间不能为空。')])
@@ -163,7 +163,7 @@ class TrainingRecordForm(FlaskForm):
 
 
 class EvaluationRecordForm(FlaskForm):
-    item = StringField(u'考核项目', validators=[ir(u'姓名不能为空。')])
-    shiftdate = DateField(u'考核日期', format='%Y-%m-%d', validators=[ir(u'开始时间不能为空。')])
-    score = IntegerField(u'考核得分', validators=[ir(u'姓名不能为空。')])
+    item = StringField(u'考核项目', validators=[ir(u'考核项目不能为空。')])
+    shiftdate = DateField(u'考核日期', format='%Y-%m-%d', validators=[ir(u'考核日期不能为空。')])
+    score = FloatField(u'考核得分', validators=[ir(u'考核得分不能为空。')])
     submit = SubmitField(u'提交')

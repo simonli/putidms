@@ -1,18 +1,31 @@
 {% extends 'base.html' %}
 {% from "_macros.html" import render_field, render_submit_field %}
 {% block content %}
-    <div class="row">
-        <div class="col-md-offset-1 col-md-6">
-            <form action="{{ url_for('main.evaluation_edit',id=record.id) }}" class="form-horizontal" role="form"
-                  method="POST">
-                {{ form.csrf_token }}
-                {{ render_field(form.item,"col-md-3","col-md-9") }}
-                {{ render_field(form.shiftdate,"col-md-3","col-md-9") }}
-                {{ render_field(form.score,"col-md-3","col-md-9") }}
-                {{ render_submit_field(form.submit,"col-md-offset-3 col-md-3") }}
-            </form>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                编辑考核：<a href="{{ url_for('main.counselor_search',cid=record.counselor_id) }}">
+                <span class="text-warning"> {{ record.counselor.username }}{% if record.counselor.religiousname %}({{ record.counselor.religiousname }}){% endif %}</span>
+            </a>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="col-md-8">
+                <form action="{{ url_for('main.evaluation_edit',id=record.id) }}" class="form-horizontal" role="form"
+                      method="POST">
+                    {{ form.csrf_token }}
+                    {{ render_field(form.item,"col-md-3","col-md-9") }}
+                    {{ render_field(form.shiftdate,"col-md-3","col-md-9", onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd'})",placeholder="格式：2016-12-15") }}
+                    {{ render_field(form.score,"col-md-3","col-md-9",type="number",min="0",step="0.01") }}
+                    {{ render_submit_field(form.submit,"col-md-offset-3 col-md-3") }}
+
+                </form>
+            </div>
         </div>
     </div>
+
+
+
 
 {% endblock %}
 

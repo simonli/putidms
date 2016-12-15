@@ -115,13 +115,15 @@ def leadclass_add(cid):
         db.session.commit()
         flash(u'带班记录添加成功。', 'success')
         return redirect(url_for('.leadclass_list', cid=cid))
-    return render_template('main/leadclass_add.html', form=form, cid=cid)
+    return render_template('main/leadclass_add.html', form=form, counselor=c)
 
 
 @mod.route('/leadclass/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def leadclass_edit(id):
     r = LeadClassRecord.query.get_or_404(id)
+    setattr(r,'division_id',r.class_.department.division_id)
+    setattr(r,'department_id',r.class_.department_id)
     form = LeadClassRecordForm(obj=r)
     if form.validate_on_submit():
         form.populate_obj(r)
@@ -159,6 +161,7 @@ def training_add(cid):
     form = TrainingRecordForm()
     if form.validate_on_submit():
         r = TrainingRecord()
+        r.counselor_id=cid
         r.name = form.name.data
         r.location = form.location.data
         r.content = form.content.data
@@ -170,7 +173,7 @@ def training_add(cid):
         db.session.commit()
         flash(u'成功添加培训记录。', 'success')
         return redirect(url_for('.training_list', cid=c.id))
-    return render_template('main/training_add.html', form=form, cid=cid)
+    return render_template('main/training_add.html', form=form, counselor=c)
 
 
 @mod.route('/training/edit/<int:id>', methods=['GET', 'POST'])
@@ -214,13 +217,15 @@ def evaluation_add(cid):
     form = EvaluationRecordForm()
     if form.validate_on_submit():
         r = EvaluationRecord()
-        r.evaluation_item = form.evaluation_item.data
-        r.evaluation_date = form.evaluation_date.data
+        r.counselor = c
+        r.item = form.item.data
+        r.shiftdate = form.shiftdate.data
         r.score = form.score.data
         db.session.add(r)
         db.session.commit()
         flash(u'添加成功。', 'success')
-    return render_template('main/evaluation_add.html', form=form, cid=cid)
+        return redirect(url_for('.evaluation_list',cid=c.id))
+    return render_template('main/evaluation_add.html', form=form, counselor=c)
 
 
 @mod.route('/evaluation/edit/<int:id>', methods=['GET', 'POST'])

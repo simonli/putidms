@@ -5,8 +5,8 @@
         <div class="panel-heading">
             <h3 class="panel-title">
                 新增培训记录：<a href="{{ url_for('main.counselor_search',cid=counselor.id) }}">
-                <span class="text-warning"> {{ counselor.username }}{% if counselor.religiousname %}(
-                    {{ counselor.religiousname }}){% endif %}</span>
+                <span class="text-warning"> {{ counselor.username }}{% if counselor.religiousname %}
+                    ({{ counselor.religiousname }}){% endif %}</span>
             </a>
             </h3>
         </div>

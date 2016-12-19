@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from flask import Blueprint, request, render_template, redirect, url_for, flash, jsonify
+from flask import current_app, Blueprint, request, render_template, redirect, url_for, flash, jsonify
 from datetime import datetime
 from .forms import CounselorForm, LeadClassRecordForm, TrainingRecordForm, EvaluationRecordForm
 from putidms.models.counselor import Counselor, LeadClassRecord, TrainingRecord, EvaluationRecord
@@ -20,8 +20,12 @@ def index():
 @mod.route('/counselor/list')
 @login_required
 def counselor_list():
-    counselors = Counselor.query.filter_by(is_delete=0).order_by(Counselor.update_time.desc()).all()
-    return render_template('main/counselor_list.html', counselors=counselors)
+    page = request.args.get('page', 1, type=int)
+    pagination = Counselor.query.filter_by(is_delete=0).order_by(Counselor.update_time.desc()) \
+        .paginate(page, per_page=current_app.config['ITEMS_PER_PAGE'], error_out=False)
+    counselors = pagination.items
+    return render_template('main/counselor_list.html', counselors=counselors, pagination=pagination,
+                           endpoint='.counselor_list')
 
 
 @mod.route('/counselor/add', methods=['GET', 'POST'])
@@ -74,26 +78,34 @@ def counselor_delete(id):
 @mod.route('/counselor/search', methods=['GET', 'POST'])
 @login_required
 def counselor_search():
+    page = request.args.get('page', 1, type=int)
     cid = request.args.get('cid')
     if cid:
         keyword = int(cid)
-        counselors = Counselor.query.filter_by(id=keyword).filter_by(is_delete=0).order_by(
-            Counselor.update_time.desc()).all()
+        pagination = Counselor.query.filter_by(id=keyword).filter_by(is_delete=0).order_by(
+            Counselor.update_time.desc()).paginate(page, per_page=current_app.config['ITEMS_PER_PAGE'], error_out=False)
     else:
-        keyword = request.form.get('keyword')
+        keyword = request.form.get('keyword', '')
         query_str = '%' + keyword + '%'
         rule = db.or_(Counselor.id == query_str, Counselor.username.like(query_str),
                       Counselor.religiousname.like(query_str), \
                       Counselor.email.like(query_str), Counselor.mobile.like(query_str))
-        counselors = Counselor.query.filter(rule).filter_by(is_delete=0).order_by(Counselor.update_time.desc()).all()
-    return render_template('main/counselor_list.html', counselors=counselors, keyword=keyword)
+        pagination = Counselor.query.filter(rule).filter_by(is_delete=0).order_by(Counselor.update_time.desc()) \
+            .paginate(page, per_page=current_app.config['ITEMS_PER_PAGE'], error_out=False)
+    counselors = pagination.items
+    return render_template('main/counselor_list.html', counselors=counselors, keyword=keyword, pagination=pagination,
+                           endpoint='.counselor_search')
 
 
 @mod.route('/leadclass/list/<int:cid>')
 @login_required
 def leadclass_list(cid):
-    records = LeadClassRecord.query.filter_by(counselor_id=cid).order_by(LeadClassRecord.update_time.desc()).all()
-    return render_template('main/leadclass_list.html', records=records)
+    page = request.args.get('page', 1, type=int)
+    pagination = LeadClassRecord.query.filter_by(counselor_id=cid).order_by(LeadClassRecord.update_time.desc()) \
+        .paginate(page, per_page=current_app.config['ITEMS_PER_PAGE'], error_out=False)
+    records = pagination.items
+    return render_template('main/leadclass_list.html', records=records, pagination=pagination,
+                           endpoint='.leadclass_list')
 
 
 @mod.route('/leadclass/add/<int:cid>', methods=['GET', 'POST'])
@@ -122,8 +134,8 @@ def leadclass_add(cid):
 @login_required
 def leadclass_edit(id):
     r = LeadClassRecord.query.get_or_404(id)
-    setattr(r,'division_id',r.class_.department.division_id)
-    setattr(r,'department_id',r.class_.department_id)
+    setattr(r, 'division_id', r.class_.department.division_id)
+    setattr(r, 'department_id', r.class_.department_id)
     form = LeadClassRecordForm(obj=r)
     if form.validate_on_submit():
         form.populate_obj(r)
@@ -147,8 +159,11 @@ def leadclass_delete():
 @mod.route('/training/list/<int:cid>')
 @login_required
 def training_list(cid):
-    records = TrainingRecord.query.filter_by(counselor_id=cid).order_by(TrainingRecord.update_time.desc()).all()
-    return render_template('main/training_list.html', records=records)
+    page = request.args.get('page', 1, type=int)
+    pagination = TrainingRecord.query.filter_by(counselor_id=cid).order_by(TrainingRecord.update_time.desc()) \
+        .paginate(page, per_page=current_app.config['ITEMS_PER_PAGE'], error_out=False)
+    records = pagination.items
+    return render_template('main/training_list.html', records=records, pagination=pagination, endpoint='.training_list')
 
 
 @mod.route('/training/add/<int:cid>', methods=['GET', 'POST'])
@@ -161,7 +176,7 @@ def training_add(cid):
     form = TrainingRecordForm()
     if form.validate_on_submit():
         r = TrainingRecord()
-        r.counselor_id=cid
+        r.counselor_id = cid
         r.name = form.name.data
         r.location = form.location.data
         r.content = form.content.data
@@ -203,8 +218,12 @@ def training_delete(id):
 @mod.route('/evaluation/list/<int:cid>')
 @login_required
 def evaluation_list(cid):
-    records = EvaluationRecord.query.filter_by(counselor_id=cid).order_by(EvaluationRecord.update_time.desc()).all()
-    return render_template('main/evaluation_list.html', records=records)
+    page = request.args.get('page', 1, type=int)
+    pagination = EvaluationRecord.query.filter_by(counselor_id=cid).order_by(EvaluationRecord.update_time.desc()) \
+        .paginate(page, per_page=current_app.config['ITEMS_PER_PAGE'], error_out=False)
+    records = pagination.items
+    return render_template('main/evaluation_list.html', records=records, pagination=pagination,
+                           endpoint='.evaluation_list')
 
 
 @mod.route('/evaluation/add/<int:cid>', methods=['GET', 'POST'])
@@ -224,7 +243,7 @@ def evaluation_add(cid):
         db.session.add(r)
         db.session.commit()
         flash(u'添加成功。', 'success')
-        return redirect(url_for('.evaluation_list',cid=c.id))
+        return redirect(url_for('.evaluation_list', cid=c.id))
     return render_template('main/evaluation_add.html', form=form, counselor=c)
 
 

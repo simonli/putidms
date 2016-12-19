@@ -93,7 +93,6 @@ class Duty(db.Model):
                 duty = Duty(name=r)
             duty.desc = duties[r][0]
             duty.create_time = datetime.utcnow()
-            duty.update_user = 'liq'
             duty.update_time = datetime.utcnow()
             db.session.add(duty)
         db.session.commit()

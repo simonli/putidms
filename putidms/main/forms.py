@@ -12,7 +12,7 @@ from putidms.models.org import Division, Department, Class, Duty
 class CounselorForm(FlaskForm):
     username = StringField(u'姓名', validators=[ir(u'姓名不能为空。')])
     religiousname = StringField(u'法名')
-    gender = MySelectField(u'性别', coerce=str, choices=[('M', u'男'), ('F', u'女')], validators=[])
+    gender = MySelectField(u'性别', coerce=unicode, choices=[(u'男', u'男'), (u'女', u'女')], validators=[])
     birthday = DateField(u'生日', format='%Y-%m-%d', validators=[ir(u'生日不能为空。')])
     mobile = StringField(u'手机', validators=[ir(u'手机号码不能为空。'), regexp('^1[34578]\d{9}$', message=u'手机号码格式不正确。')])
     email = StringField(u'Email', validators=[email(u'Email格式不正确')])

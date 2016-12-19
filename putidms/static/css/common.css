@@ -1,19 +1,15 @@
 ﻿body {
-    font-family: "Lantinghei SC", "Microsoft YaHei", Helvetica, Arial, sans-serif;
-    /*font-size: 14px;*/
+    font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei", sans-serif;
 }
 
-.container {
-    margin-top: 10px;
-    /*border: #CCCCCC solid 1px;*/
+table td {
+    font-size: 12px;
 }
 
-
-.putidms-title a {
-    text-decoration: none;
-}
-
-.header-nav {
-    line-height: 36px;
+table tr {
     font-size: 16px;
+}
+
+.pagination {
+    margin-top: 0px;
 }

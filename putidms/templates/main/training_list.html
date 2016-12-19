@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from "_macros.html" import pagination_widget %}
 {% block content %}
     <div class="row">
         <div class="col-md-12">
@@ -18,7 +19,7 @@
                         </tr>
                         {% for r in records %}
                             <tr>
-                                <td>{{ loop.index }}</td>
+                                <td>{{ (pagination.page - 1) * 1 + loop.index }}</td>
                                 <td>
                                     <a href="{{ url_for('main.counselor_search',cid=r.counselor_id) }}">
                                         {{ r.counselor.username }}{% if r.counselor.religiousname %}(
@@ -44,6 +45,7 @@
                             </tr>
                         {% endfor %}
                     </table>
+                    {{ pagination_widget(pagination, endpoint,cid=records[0].counselor_id) }}
                 </div>
             {% else %}
                 <div class="row">

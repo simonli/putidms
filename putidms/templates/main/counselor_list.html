@@ -46,7 +46,7 @@
                         </tr>
                         {% for c in counselors %}
                             <tr>
-                                <td>{{ (pagination.page - 1) * 1 + loop.index }}</td>
+                                <td>{{ (pagination.page - 1) * config.ITEMS_PER_PAGE + loop.index }}</td>
                                 <td>{{ c.username }}</td>
                                 <td>{{ c.religiousname }} </td>
                                 <td>{{ c.gender }}</td>

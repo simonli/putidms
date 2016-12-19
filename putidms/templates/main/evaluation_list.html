@@ -16,7 +16,7 @@
                         </tr>
                         {% for r in records %}
                             <tr>
-                                <td>{{ (pagination.page - 1) * 1 + loop.index }}</td>
+                                <td>{{ (pagination.page - 1) * config.ITEMS_PER_PAGE + loop.index }}</td>
                                 <td>
                                     <a href="{{ url_for('main.counselor_search',cid=r.counselor_id) }}">
                                         {{ r.counselor.username }}{% if r.counselor.religiousname %}(

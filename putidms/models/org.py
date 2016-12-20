@@ -13,6 +13,7 @@ class Division(db.Model):
     create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
     departments = db.relationship('Department', backref='division', lazy='dynamic')
+    users = db.relationship('User', backref='division', lazy='dynamic')
 
     def __init__(self, *args, **kwargs):
         super(Division, self).__init__(*args, **kwargs)

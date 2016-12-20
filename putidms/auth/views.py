@@ -42,16 +42,16 @@ def logout():
 
 
 @mod.route('/user/list')
-@admin_required
 @login_required
+@admin_required
 def user_list():
     users = User.query.all()
     return render_template('auth/user_list.html', users=users)
 
 
 @mod.route('/user/add', methods=['GET', 'POST'])
-@admin_required
 @login_required
+@admin_required
 def user_add():
     user = User()
     form = UserForm(obj=user)
@@ -73,8 +73,8 @@ def user_add():
 
 
 @mod.route('/user/edit/<int:id>', methods=['GET', 'POST'])
-@admin_required
 @login_required
+@admin_required
 def user_edit(id):
     user = User.query.get(id)
     form = UserForm(obj=user)
@@ -89,8 +89,8 @@ def user_edit(id):
 
 
 @mod.route('/user/delete/<int:id>', methods=['GET'])
-@admin_required
 @login_required
+@admin_required
 def user_delete(id):
     user = User.query.get(id)
     user.is_delete = 1

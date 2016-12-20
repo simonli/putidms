@@ -35,6 +35,7 @@ def division_add():
 
 
 @mod.route('/division/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
 @admin_required
 def division_edit(id):
     div = Division.query.get_or_404(id)
@@ -49,6 +50,7 @@ def division_edit(id):
 
 
 @mod.route('/division/delete/<int:id>', methods=['GET'])
+@login_required
 @admin_required
 def division_delete(id):
     div = Division.query.get_or_404(id)
@@ -115,7 +117,7 @@ def department_edit(id):
 
 
 @mod.route('/department/delete/<int:id>', methods=['GET'])
-@admin_required
+@login_required
 def department_delete(id):
     dept = Department.query.get_or_404(id)
     if len(dept.classes) > 0:
@@ -184,7 +186,7 @@ def class_edit(id):
 
 
 @mod.route('/class/delete/<int:id>')
-@admin_required
+@login_required
 def class_delete(id):
     cls = Class.query.get_or_404(id)
     if len(cls.counselors) > 0:
@@ -203,7 +205,7 @@ def duty_list():
 
 
 @mod.route('/duty/add', methods=['GET', 'POST'])
-@admin_required
+@login_required
 def duty_add():
     form = DutyForm()
     if form.validate_on_submit():

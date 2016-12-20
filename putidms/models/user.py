@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 from datetime import datetime
 
-from flask_login import UserMixin,current_user
+from flask_login import UserMixin, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from putidms import db
@@ -94,13 +94,11 @@ class User(UserMixin, db.Model):
     def can(self, permissions):
         return self.role is not None and (self.role.permissions | permissions) == permissions
 
-    def cando(self,division_id):
+    def cando(self, division_id):
         if self.role.permissions | Permission.USER == Permission.USER:
             if self.division_id != division_id:
                 return False
         return True
-
-
 
     def update_login_info(self, last_login_ip):
         self.last_login_ip = last_login_ip
@@ -110,7 +108,16 @@ class User(UserMixin, db.Model):
 
     @staticmethod
     def create_admin():
-        pass
+        u = User()
+        u.username='admin'
+        u.password='putishuyuan'
+        u.realname='Admin'
+        u.email='admin@localhost'
+        u.role = Role.query.filter_by(name='Admin').first()
+        u.division_id = 0
+        db.session.add(u)
+        db.session.commit()
+
 
 # callback function for flask-login extentsion
 @login_manager.user_loader

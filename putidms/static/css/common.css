@@ -6,8 +6,8 @@ table td {
     font-size: 12px;
 }
 
-table tr {
-    font-size: 16px;
+th {
+    font-size: 12px;
 }
 
 .pagination {

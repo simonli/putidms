@@ -10,16 +10,6 @@ app = create_app('default')
 
 manager = Manager(app)
 
-@manager.option('-u', '--username', dest='username')
-@manager.option('-r', '--realname', dest='realname')
-@manager.option('-p', '--password', dest='password')
-@manager.option('-e', '--email', dest='email')
-@manager.option('-role', '--role_id', dest='role_id')
-@manager.option('-div', '--division_id', dest='division_id')
-def create_admin(username,password,realname,email,role_id,division_id):
-    username = ''
-
-
 def make_shell_context():
     return dict(app=app, db=db, User=User, Role=Role,Duty=Duty)
 

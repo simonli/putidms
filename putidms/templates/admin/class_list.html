@@ -1,38 +1,72 @@
 {% extends 'base.html' %}
-{% from "_macros.html" import render_field, render_submit_field %}
+{% from "_macros.html" import render_field, render_submit_field, pagination_widget %}
 {% block content %}
-    {% if classes %}
-        <div class="row">
-            <div class="col-md-offset-1 col-md-8">
-                <table class="table table-bordered">
-                    <tr>
-                        <td>班级</td>
-                        <td>描述</td>
-                        <td>修学点</td>
-                        <td>修学处</td>
-                        <td>修改/删除</td>
-                    </tr>
-                    {% for cls in classes %}
-                        <tr>
-                            <td>{{ cls.name }}</td>
-                            <td>{{ cls.desc }}</td>
-                            <td>{{ cls.department.name }}</td>
-                            <td>{{ cls.department.division.name }}</td>
-                            <td>
-                                <a href="{{ url_for('admin.class_edit',id=cls.id) }}" title="编辑">
-                                    <span class="glyphicon glyphicon-pencil"></span>编辑
-                                </a>|
-                                <a href="javascript:void(0);" title="删除班级"
-                                   onclick="confirm_delete('{{ url_for("admin.class_delete",id=cls.id) }}');">
-                                    <span class="glyphicon glyphicon-trash"></span>删除
-                                </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </table>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <form action="{{ url_for('admin.class_search') }}" method="post" role="form"
+                      class="form-horizontal">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <input class="form-control" type="text" id="keyword" name="keyword"
+                                   value="{{ keyword }}"
+                                   placeholder="班级名称，编号">
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-default">
+                            <span class="glyphicon glyphicon-search"></span> 查找
+                        </button>
+                    </div>
+                </form>
+                <div class="col-md-2" style="margin-left: 20px;">
+                    <a class="btn btn-default" href="{{ url_for('admin.class_add') }}" role="button">
+                        <span class="glyphicon glyphicon-plus"></span> 新增修学点
+                    </a>
+                </div>
             </div>
+            {% if classes %}
+                <div class="row">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>序号</td>
+                            <td>班级</td>
+                            <td>描述</td>
+                            <td>修学点</td>
+                            <td>修学处</td>
+                            <td>修改/删除</td>
+                        </tr>
+                        {% for cls in classes %}
+                            <tr>
+                                <td>{{ (pagination.page - 1) * config.ITEMS_PER_PAGE + loop.index }}</td>
+                                <td>{{ cls.name }}</td>
+                                <td>{{ cls.desc }}</td>
+                                <td>{{ cls.department.name }}</td>
+                                <td>{{ cls.department.division.name }}</td>
+                                <td>
+                                    <a href="{{ url_for('admin.class_edit',id=cls.id) }}" title="编辑">
+                                        <span class="glyphicon glyphicon-pencil"></span>编辑
+                                    </a>|
+                                    <a href="javascript:void(0);" title="删除班级"
+                                       onclick="confirm_delete('{{ url_for("admin.class_delete",id=cls.id) }}');">
+                                        <span class="glyphicon glyphicon-trash"></span>删除
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    {{ pagination_widget(pagination, endpoint) }}
+                </div>
+            {% else %}
+                <div class="row">
+                    <div class="col-md-12">
+                        没有找到相关资料！
+                    </div>
+                </div>
+            {% endif %}
         </div>
-    {% endif %}
+    </div>
+
 {% endblock %}
 
 {% block js %}

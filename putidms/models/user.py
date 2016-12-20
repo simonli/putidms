@@ -1,9 +1,11 @@
 # -*- coding:utf-8 -*-
-from putidms import db
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin
-from putidms import login_manager
 from datetime import datetime
+
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from putidms import db
+from putidms import login_manager
 
 
 class Permission:
@@ -62,6 +64,7 @@ class User(UserMixin, db.Model):
     update_user = db.Column(db.Integer)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
     is_delete = db.Column(db.Integer, default=0)
+    division_id = db.Column(db.Integer, db.ForeignKey('divisions.id'))
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)
@@ -97,6 +100,9 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         db.session.commit()
 
+    @staticmethod
+    def create_admin():
+        pass
 
 # callback function for flask-login extentsion
 @login_manager.user_loader

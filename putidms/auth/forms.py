@@ -1,10 +1,11 @@
 # -*- coding:utf-8 -*-
-from wtforms import StringField, PasswordField, SubmitField, SelectField, ValidationError
-from wtforms.validators import input_required as ir
-from wtforms.widgets import PasswordInput
 from flask_wtf import FlaskForm
-from putidms.models.user import User, Role
+from wtforms import StringField, PasswordField, SubmitField, ValidationError
+from wtforms.validators import input_required as ir
+
 from putidms.extensions import MySelectField
+from putidms.models.org import Division
+from putidms.models.user import User, Role
 
 
 class LoginForm(FlaskForm):
@@ -19,17 +20,24 @@ class UserForm(FlaskForm):
     realname = StringField(u'真实姓名', validators=[ir(u'真实名或法名不能为空。')])
     email = StringField(u'邮件', validators=[ir(u'邮件地址不能为空。')])
     role_id = MySelectField(u'权限', coerce=int)
+    division_id = MySelectField(u'所属修学处', coerce=int)
     submit = SubmitField(u'提交')
 
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
+        self.user = kwargs.get('obj')
 
         role_choices = [(r.id, r.show_name) for r in Role.query.order_by(Role.name).all()]
         role_choices.insert(0, (0, u'请选择权限'))
         self.role_id.choices = role_choices
-        self.user = kwargs.get('obj')
+
+        division_choices = [(r.id, r.name) for r in Division.query.order_by(Division.name).all()]
+        division_choices.insert(0, (0, u'请选择所属修学处'))
+        self.division_id.choices = division_choices
+
         if self.user:
             self.role_id.default = self.user.role_id
+            self.division_id.default = self.user.division_id
 
     def validate_role_id(self, field):
         if field.data <= 0:

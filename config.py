@@ -14,7 +14,7 @@ class Config():
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     # WTF_CSRF_ENABLED = False
-    ITEMS_PER_PAGE = 2
+    ITEMS_PER_PAGE = 10
 
 
 class DevelopmentConfig(Config):

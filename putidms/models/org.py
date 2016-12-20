@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
-from putidms import db
 from datetime import datetime
+
+from putidms import db
 
 
 class Division(db.Model):
@@ -11,7 +12,6 @@ class Division(db.Model):
     update_user = db.Column(db.Integer)
     create_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_time = db.Column(db.DateTime, default=datetime.utcnow)
-
     departments = db.relationship('Department', backref='division', lazy='dynamic')
 
     def __init__(self, *args, **kwargs):

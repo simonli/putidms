@@ -1,9 +1,10 @@
 # -*- coding:utf-8 -*-
-from wtforms import StringField, TextAreaField, SelectField, SubmitField, ValidationError
-from wtforms.validators import input_required as ir
 from flask_wtf import FlaskForm
-from putidms.models.org import Division, Department, Class, Duty
+from wtforms import StringField, TextAreaField, SubmitField, ValidationError
+from wtforms.validators import input_required as ir
+
 from putidms.extensions import MySelectField
+from putidms.models.org import Division, Department, Class, Duty
 
 
 class DivisionForm(FlaskForm):

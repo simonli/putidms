@@ -1,10 +1,13 @@
 # -*- coding:utf-8 -*-
-from flask import Blueprint, request, render_template, redirect, url_for, flash
-from .forms import LoginForm, UserForm
-from putidms.models.user import User, Role
-from flask_login import login_user, logout_user, login_required, current_user
-from putidms import db
 from datetime import datetime
+
+from flask import Blueprint, request, render_template, redirect, url_for, flash
+from flask_login import login_user, logout_user, login_required, current_user
+
+from putidms import db
+from putidms.models.user import User, Role
+from .forms import LoginForm, UserForm
+from putidms.decorators import admin_required
 
 mod = Blueprint('auth', __name__)
 
@@ -39,12 +42,16 @@ def logout():
 
 
 @mod.route('/user/list')
+@admin_required
+@login_required
 def user_list():
     users = User.query.all()
     return render_template('auth/user_list.html', users=users)
 
 
 @mod.route('/user/add', methods=['GET', 'POST'])
+@admin_required
+@login_required
 def user_add():
     user = User()
     form = UserForm(obj=user)
@@ -53,7 +60,8 @@ def user_add():
         user.password = form.password.data
         user.realname = form.realname.data
         user.email = form.email.data
-        user.role = Role.query.get(form.role_id.data)
+        user.role_id =form.role_id.data
+        user.division_id = form.division_id.data
         user.create_time = datetime.utcnow()
         user.last_login_time = datetime.utcnow()
         user.last_login_ip = request.remote_addr
@@ -65,6 +73,8 @@ def user_add():
 
 
 @mod.route('/user/edit/<int:id>', methods=['GET', 'POST'])
+@admin_required
+@login_required
 def user_edit(id):
     user = User.query.get(id)
     form = UserForm(obj=user)
@@ -79,6 +89,7 @@ def user_edit(id):
 
 
 @mod.route('/user/delete/<int:id>', methods=['GET'])
+@admin_required
 @login_required
 def user_delete(id):
     user = User.query.get(id)

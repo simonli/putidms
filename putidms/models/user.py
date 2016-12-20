@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 from datetime import datetime
 
-from flask_login import UserMixin
+from flask_login import UserMixin,current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from putidms import db
@@ -93,6 +93,14 @@ class User(UserMixin, db.Model):
 
     def can(self, permissions):
         return self.role is not None and (self.role.permissions | permissions) == permissions
+
+    def cando(self,division_id):
+        if self.role.permissions | Permission.USER == Permission.USER:
+            if self.division_id != division_id:
+                return False
+        return True
+
+
 
     def update_login_info(self, last_login_ip):
         self.last_login_ip = last_login_ip

@@ -14,45 +14,47 @@
 </head>
 <body>
 <header>
-    <div class='header-top'>
-        <div class="container">
-            <h2 class="putidms-title"><a href="{{ url_for('main.index') }}">菩提书院辅导员管理系统</a></h2>
-            <p class="lead signature">悲智双运，自觉觉他</p>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="putidms-title"><a href="{{ url_for('main.index') }}">菩提书院辅导员管理系统</a></h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <ol class="breadcrumb">
+                    <li><a href="{{ url_for('main.index') }}">首页</a></li>
+                    <li><a href="{{ url_for('main.counselor_list') }}">辅导员管理</a></li>
+                    <li class="active"><a href="{{ url_for('admin.division_list') }}">修学处管理</a></li>
+                    <li><a href="{{ url_for('admin.department_list') }}">修学点管理</a></li>
+                    <li><a href="{{ url_for('admin.class_list') }}">班级管理</a></li>
+                    <li><a href="{{ url_for('auth.user_list') }}">管理员管理</a></li>
+                </ol>
+            </div>
         </div>
     </div>
 </header>
 <div class="container">
-    <div class="row" id="content2">
-        <div class="col-md-2">
-            {% block sidebar %}
-                <div class="list-group">
-                    <a href="{{ url_for('main.counselor_list') }}" class="list-group-item active">辅导员管理</a>
-                    <a href="{{ url_for('admin.division_list') }}" class="list-group-item">修学处管理</a>
-                    <a href="{{ url_for('admin.department_list') }}" class="list-group-item">修学点管理</a>
-                    <a href="{{ url_for('admin.class_list') }}" class="list-group-item">班级管理</a>
-                    <a href="{{ url_for('auth.user_list') }}" class="list-group-item">管理员管理</a>
-                </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% block flash %}
+                {% for category, message in get_flashed_messages(with_categories=true) %}
+                    <div class="alert alert-{{ category }} alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert"
+                                aria-hidden="true">&times;</button>
+                        {{ message|safe }}
+                    </div>
+                {% endfor %}
             {% endblock %}
         </div>
-        <div class="col-md-9" style="margin-left: 20px;">
-            <div class="row">
-                {% block flash %}
-                    {% for category, message in get_flashed_messages(with_categories=true) %}
-                        <div class="alert alert-{{ category }} alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert"
-                                    aria-hidden="true">&times;</button>
-                            {{ message|safe }}
-                        </div>
-                    {% endfor %}
-                {% endblock %}
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    {% block content %}{% endblock %}
-                </div>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="margin-left: 15px;">
+            {% block content %}{% endblock %}
         </div>
     </div>
+
+
 </div>
 <footer>
 

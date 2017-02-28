@@ -31,6 +31,7 @@
                         <tr>
                             <td>序号</td>
                             <td>班级</td>
+                            <td>编号</td>
                             <td>描述</td>
                             <td>修学点</td>
                             <td>修学处</td>
@@ -40,6 +41,7 @@
                             <tr>
                                 <td>{{ (pagination.page - 1) * config.ITEMS_PER_PAGE + loop.index }}</td>
                                 <td>{{ cls.name }}</td>
+                                <td>{{ cls.number }}</td>
                                 <td>{{ cls.desc }}</td>
                                 <td>{{ cls.department.name }}</td>
                                 <td>{{ cls.department.division.name }}</td>

@@ -13,8 +13,11 @@ mod = Blueprint('admin', __name__)
 @mod.route('/division/list')
 @login_required
 def division_list():
-    divs = Division.query.all()
-    return render_template('admin/division_list.html', divs=divs)
+    page = request.args.get('page', 1, type=int)
+    pagination = Division.query.paginate(page, per_page=current_app.config['ITEMS_PER_PAGE'], error_out=False)
+    divs = pagination.items
+    return render_template('admin/division_list.html', divs=divs, pagination=pagination,
+                           endpoint='.division_list')
 
 
 @mod.route('/division/add', methods=['GET', 'POST'])
@@ -60,6 +63,19 @@ def division_delete(id):
         db.session.remove(div)
         flash(u'成功删除修学处：%s' % div.name)
     return redirect(url_for('.division_list'))
+
+
+@mod.route('/division/search', methods=['GET', 'POST'])
+@login_required
+def division_search():
+    page = request.args.get('page', 1, type=int)
+    keyword = request.form.get('keyword', '')
+    query_str = '%' + keyword + '%'
+    pagination = Division.query.filter(Division.name.like(query_str)) \
+        .paginate(page, per_page=current_app.config['ITEMS_PER_PAGE'], error_out=False)
+    divs = pagination.items
+    return render_template('admin/division_list.html', divs=divs, keyword=keyword, pagination=pagination,
+                           endpoint='.division_search')
 
 
 @mod.route('/department/list')

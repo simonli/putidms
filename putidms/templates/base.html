@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}</title>
     {% block css %}
         <link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"
@@ -9,12 +10,15 @@
         <link href="{{ url_for('static', filename='css/common.css') }}" rel="stylesheet" type="text/css"/>
         <link href="{{ url_for('static', filename='css/jquery-confirm.min.css') }}" rel="stylesheet" type="text/css"/>
     {% endblock %}
+    <script src="{{ url_for('static', filename='js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery-confirm.min.js') }}"></script>
     {% block js %}
     {% endblock %}
 </head>
 <body>
-<header>
-    <div class="container">
+<div class="container">
+    <header>
         <div class="row">
             <div class="col-md-12">
                 <h2 class="putidms-title"><a href="{{ url_for('main.index') }}">管理系统</a></h2>
@@ -32,41 +36,38 @@
                 </ol>
             </div>
         </div>
-    </div>
-</header>
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            {% block flash %}
-                {% for category, message in get_flashed_messages(with_categories=true) %}
-                    <div class="alert alert-{{ category }} alert-dismissable">
-                        <button type="button" class="close" data-dismiss="alert"
-                                aria-hidden="true">&times;</button>
-                        {{ message|safe }}
-                    </div>
-                {% endfor %}
-            {% endblock %}
+    </header>
+    <section>
+        <div class="row">
+            <div class="col-md-12">
+                {% block flash %}
+                    {% for category, message in get_flashed_messages(with_categories=true) %}
+                        <div class="alert alert-{{ category }} alert-dismissable">
+                            <button type="button" class="close" data-dismiss="alert"
+                                    aria-hidden="true">&times;</button>
+                            {{ message|safe }}
+                        </div>
+                    {% endfor %}
+                {% endblock %}
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12" style="margin-left: 15px;">
-            {% block content %}{% endblock %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="container-fluid">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
         </div>
-    </div>
-
-
+    </section>
+    <footer>
+        <div class="row">
+            <div class="col-md-12">
+                <hr/>
+                <p>&copy; @2017 - 菩提书院</p>
+            </div>
+        </div>
+    </footer>
 </div>
-<footer>
 
-    <div class="container">
-        <hr/>
-        <p>&copy; @2017 - 菩提书院</p>
-    </div>
-
-</footer>
-
-<script src="{{ url_for('static', filename='js/jquery-3.1.1.min.js') }}"></script>
-<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/jquery-confirm.min.js') }}"></script>
 </body>
 </html>

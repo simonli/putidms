@@ -1,34 +1,63 @@
 {% extends 'base.html' %}
-{% from "_macros.html" import render_field, render_submit_field %}
+{% from "_macros.html" import render_field, render_submit_field, pagination_widget %}
 {% block content %}
+    <div class="row">
+        <form class="form-horizontal" action="{{ url_for('admin.division_search') }}" method="post">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <input class="form-control" type="text" id="keyword" name="keyword"
+                           value="{{ keyword }}"
+                           placeholder="修学处名称">
+                </div>
+            </div>
+            <div class="col-md-1">
+                <button type="submit" id="btn" class="btn btn-default">
+                    <span class="glyphicon glyphicon-search"></span> 查找
+                </button>
+            </div>
+        </form>
+        <div class="col-md-2" style="margin-bottom:10px;">
+            <a class="btn btn-default" href="{{ url_for('admin.division_add') }}" role="button">
+                <span class="glyphicon glyphicon-plus"></span> 新增修学处
+            </a>
+        </div>
+    </div>
     {% if divs %}
         <div class="row">
-            <div class="col-md-12">
-                <table class="table table-bordered">
+            <table class="table table-striped table-bordered table-hover table-condensed">
+                <tr class="info">
+                    <td>序号</td>
+                    <td>修学处</td>
+                    <td>描述</td>
+                    <td>修改/删除</td>
+                </tr>
+                {% for div  in divs %}
                     <tr>
-                        <td>修学处</td>
-                        <td>描述</td>
-                        <td>操作</td>
+                        <td>{{ (pagination.page - 1) * config.ITEMS_PER_PAGE + loop.index }}</td>
+                        <td>{{ div.name }}</td>
+                        <td>{{ div.desc }}</td>
+                        <td>
+                            <a href="{{ url_for('admin.division_edit',id=div.id) }}" title="编辑">
+                                <span class="glyphicon glyphicon-pencil"></span>编辑
+                            </a>|
+                            <a href="javascript:void(0);" title="删除修学处"
+                               onclick="confirm_delete('{{ url_for("admin.division_delete",id=div.id) }}');">
+                                <span class="glyphicon glyphicon-trash"></span>删除
+                            </a>
+                        </td>
                     </tr>
-                    {% for div in divs %}
-                        <tr>
-                            <td>{{ div.name }}</td>
-                            <td>{{ div.desc }}</td>
-                            <td>
-                                <a href="{{ url_for('admin.division_edit',id=div.id) }}" title="编辑">
-                                    <span class="glyphicon glyphicon-pencil"></span>编辑
-                                </a>|
-                                <a href="javascript:void(0);" title="删除修学处"
-                                   onclick="confirm_delete('{{ url_for("admin.division_delete",id=div.id) }}');">
-                                    <span class="glyphicon glyphicon-trash"></span>删除
-                                </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </table>
+                {% endfor %}
+            </table>
+            {{ pagination_widget(pagination, endpoint) }}
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col-md-12">
+                没有找到相关资料！
             </div>
         </div>
     {% endif %}
+
 {% endblock %}
 
 {% block js %}

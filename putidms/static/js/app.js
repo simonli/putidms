@@ -60,29 +60,12 @@ function confirm_delete(url) {
     });
 }
 
-function checkInputKeyword() {
-    var keyword = $("#keyword")
-    if (!keyword.val()) {
-        $.alert({
-            title: 'Alert',
-            content: '关键词不能为空'
-        })
+$('#form').submit(function (e) {
+    var keyword = $('#keyword')
+    if(keyword.val()==undefined){
+        $('msg').text('关键词不能为空').show().fadeOut(2000);
+        event.preventDefault()
 
     }
-}
-
-$(function () {
-    $('#btn').bind('onclick',function () {
-        var keyword = $('keyword').val()
-        console.log('**************')
-        console.log(keyword)
-        if(!keyword){
-            $.alert({
-                title:'Alert',
-                content:'关键词不能为空'
-            })
-        }
-
-    })
 
 })

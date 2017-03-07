@@ -13,8 +13,6 @@
     <script src="{{ url_for('static', filename='js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery-confirm.min.js') }}"></script>
-    {% block js %}
-    {% endblock %}
 </head>
 <body>
 <div class="container">
@@ -70,4 +68,6 @@
 </div>
 
 </body>
+{% block js %}
+{% endblock %}
 </html>

@@ -2,13 +2,14 @@
 {% from "_macros.html" import render_field, render_submit_field, pagination_widget %}
 {% block content %}
     <div class="row">
-        <form class="form-horizontal" action="{{ url_for('admin.division_search') }}" method="post">
+        <form class="form-horizontal" action="{{ url_for('admin.division_search') }}" method="post" id="form">
             <div class="col-md-3">
                 <div class="form-group">
                     <input class="form-control" type="text" id="keyword" name="keyword"
                            value="{{ keyword }}"
                            placeholder="修学处名称">
                 </div>
+                <span id="msg"></span>
             </div>
             <div class="col-md-1">
                 <button type="submit" id="btn" class="btn btn-default">

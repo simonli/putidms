@@ -7,14 +7,22 @@
     margin-top: 0px;
 }
 
-.breadcrumb {
-    padding: 13px 15px;
-    font-size: 16px;
 
+.navmenu {
+  padding: 13px 15px;
+  margin-bottom: 20px;
+  list-style: none;
+  background-color: #000;
+  border-radius: 4px;
 }
-
-.breadcrumb > li + li:before {
-    padding: 0 5px;
-    color: #ccc;
-    content: "|\00a0";
+.navmenu > li {
+  display: inline-block;
+}
+.navmenu > li + li:before {
+  padding: 0 5px;
+  color: #ccc;
+  content: "|\00a0";
+}
+.navmenu > .active {
+  color: #777;
 }

@@ -68,8 +68,8 @@ class ClassForm(FlaskForm):
         self.division_id.choices = division_choices
 
         if self.class_:
-            dept_choices = [(r.id, r.name) for r in Department.query\
-                                .filter_by(division_id=self.division_id.data).all()]
+            dept_choices = [(r.id, r.name) for r in Department.query \
+                .filter_by(division_id=self.division_id.data).all()]
         else:
             dept_choices = [(r.id, r.name) for r in Department.query.all()]
         dept_choices.insert(0, (0, u'请选择所属修学点'))

@@ -57,11 +57,13 @@ def division_edit(id):
 @admin_required
 def division_delete(id):
     div = Division.query.get_or_404(id)
-    if len(div.departments) > 0:
-        flash(u'删除失败！若要删除此修学处，需要先将此修学处下的修学点调到其他的修学处下！')
+    print "#"*80
+    print div.departments
+    if len(div.departments.all()) > 0:
+        flash(u'删除失败！若要删除此修学处，需要先将此修学处下的修学点调到其他的修学处下！','danger')
     else:
         db.session.remove(div)
-        flash(u'成功删除修学处：%s' % div.name)
+        flash(u'成功删除修学处：%s' % div.name,'success')
     return redirect(url_for('.division_list'))
 
 
@@ -136,11 +138,11 @@ def department_edit(id):
 @login_required
 def department_delete(id):
     dept = Department.query.get_or_404(id)
-    if len(dept.classes) > 0:
-        flash(u'删除失败！若要删除此修学点，需要先将此修学点下的班级调到其他的修学点下！')
+    if len(dept.classes.all()) > 0:
+        flash(u'删除失败！若要删除此修学点，需要先将此修学点下的班级调到其他的修学点下！','danger')
     else:
         db.session.remove(dept)
-        flash(u'成功删除修学点：%s' % dept.name)
+        flash(u'成功删除修学点：%s' % dept.name,'success')
     return redirect(url_for('.department_list'))
 
 
@@ -206,10 +208,10 @@ def class_edit(id):
 def class_delete(id):
     cls = Class.query.get_or_404(id)
     if len(cls.counselors) > 0:
-        flash(u'删除失败！若要删除此班级，需要先将此班级下的辅导员等先删除或调整！')
+        flash(u'删除失败！若要删除此班级，需要先将此班级下的辅导员等先删除或调整！','danger')
     else:
         db.session.remove(cls)
-        flash(u'成功删除班级：%s' % cls.name)
+        flash(u'成功删除班级：%s' % cls.name,'success')
     return redirect(url_for('.class_list'))
 
 
